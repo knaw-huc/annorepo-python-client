@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "annorepo_client"
+name = "annorepo-client"
 version = "0.1.0"
 description = ""
 authors = ["Bram Buitendijk <bram.buitendijk@di.huc.knaw.nl>"]
