@@ -1,9 +1,18 @@
 [tool.poetry]
 name = "annorepo-client"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Bram Buitendijk <bram.buitendijk@di.huc.knaw.nl>"]
 readme="README.md"
+license="MIT"
+homepage="https://github.com/brambg/annorepo-python-client"
+repository="https://github.com/brambg/annorepo-python-client"
+classifiers=[
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python"
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
