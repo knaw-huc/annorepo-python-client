@@ -13,7 +13,7 @@ poetry add annorepo-client
 ### using pip
 
 ```
-poetry add annorepo-client
+pip install annorepo-client
 ```
 
 

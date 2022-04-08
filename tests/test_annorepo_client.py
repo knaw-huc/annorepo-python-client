@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from annorepo_client import __version__
-from annorepo_client.client import AnnoRepoClient
+from annorepo import __version__
+from annorepo.client import AnnoRepoClient
 
 
 class AnnoRepoTestSuite(unittest.TestCase):

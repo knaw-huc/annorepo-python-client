@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-project_init_file = 'annorepo_client/__init__.py'
+project_init_file = 'annorepo/__init__.py'
 
 
 def hello(who=None):

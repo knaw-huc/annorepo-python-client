@@ -14,6 +14,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
 ]
+packages = [{ include = "annorepo" }]
 
 [tool.poetry.dependencies]
 python = "^3.6"
@@ -25,7 +26,7 @@ pytest = "^6.2.5"
 "Bug Tracker" = "https://github.com/brambg/annorepo-python-client/issues"
 
 [tool.poetry.scripts]
-version = 'poetry_scripts:update_version'
+version = 'poetry_scripts:version'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
