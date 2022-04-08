@@ -19,14 +19,13 @@ classifiers = [
 python = "^3.6"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.2.5"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/brambg/annorepo-python-client/issues"
 
 [tool.poetry.scripts]
-hello = 'poetry_scripts:hello'
-update_version = 'poetry_scripts:update_version'
+version = 'poetry_scripts:update_version'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

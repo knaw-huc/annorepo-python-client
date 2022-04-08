@@ -10,14 +10,15 @@ def hello(who=None):
     print(f"Hello, {who}")
 
 
-def update_version(argv=None):
+def version(argv=None):
     if not argv:
         argv = sys.argv
     parameter = argv[1]
     result = subprocess.run(["poetry", "version", parameter], capture_output=True)
-    stdout_decode = result.stdout.decode().strip()
-    print(stdout_decode)
-    new_version = stdout_decode.split()[-1]
+    stdout = result.stdout.decode().strip()
+    print(stdout)
+    print(result.stderr.decode().strip(), file=sys.stderr)
+    new_version = stdout.split()[-1]
     with open(project_init_file) as f:
         lines = f.readlines()
     with open(project_init_file, 'w') as f:
