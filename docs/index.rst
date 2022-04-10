@@ -3,7 +3,7 @@
 |an|
 ===============
 
-Pyton client to access an AnnoRepo server.
+Python client to access an |an| server.
 
 
 Installation
@@ -25,14 +25,14 @@ Support
 
 If you are having issues, please let us know at:
 
-https://github.com/brambg/annorepo/issues
+https://github.com/brambg/annorepo-python-client/issues
 
 Contribute
 ----------
 
 Want to improve the |an|? Submit a pull request at:
 
-https://github.com/brambg/annorepo
+https://github.com/brambg/annorepo-python-client
 
 License
 -------

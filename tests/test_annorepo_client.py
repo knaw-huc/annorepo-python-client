@@ -8,7 +8,7 @@ from annorepo.client import AnnoRepoClient
 class AnnoRepoTestSuite(unittest.TestCase):
 
     def test_version(self):
-        assert __version__ == '0.1.0'
+        assert __version__ != ''
 
     def test_client(self):
         c = AnnoRepoClient("http://localhost:8080/")
