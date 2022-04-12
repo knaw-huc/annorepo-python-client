@@ -18,6 +18,7 @@ packages = [{ include = "annorepo" }]
 
 [tool.poetry.dependencies]
 python = "^3.7"
+requests = "^2.27.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
