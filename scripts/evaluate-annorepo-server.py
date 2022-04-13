@@ -45,10 +45,11 @@ def main():
         evaluate_task('get_swagger_yaml', client.get_swagger_yaml)
 
         print()
-        print(f"{Fore.GREEN}{success_counter} successes{Fore.RESET}")
-        print(f"{Fore.RED}{failure_counter} failures{Fore.RESET}")
+        print(f"{Fore.BLUE}{success_counter + failure_counter} tasks run:{Fore.RESET}")
+        print(f"  {Fore.GREEN}{success_counter} successes{Fore.RESET}")
+        print(f"  {Fore.RED}{failure_counter} failures{Fore.RESET}")
         print()
-        print(f"{Fore.BLUE}done!{Fore.RESET}")
+        print(f"{Fore.BLUE}evaluation done!{Fore.RESET}")
 
 
 if __name__ == '__main__':
