@@ -8,15 +8,16 @@ import annorepo
 
 
 class AnnoRepoClient:
-    def __init__(self, base_url: str, timeout: int = None, api_key=None, verbose: bool = False):
+    def __init__(self, base_url: str, admin_url: str = None, timeout: int = None, api_key=None, verbose: bool = False):
         self.api_key = api_key
         self.base_url = base_url.strip('/')
+        self.admin_url = admin_url.strip('/') if admin_url else "http://localhost:8081"
         self.raise_exception = True
         self.timeout = timeout
         self.verbose = verbose
 
     def __str__(self):
-        return f'AnnoRepoClient({self.base_url})'
+        return f'AnnoRepoClient({self.base_url}, {self.admin_url})'
 
     def __repr__(self):
         return self.__str__()
@@ -48,6 +49,16 @@ class AnnoRepoClient:
 
     def get_swagger_yaml(self):
         url = f'{self.base_url}/swagger.yaml'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_healthcheck(self):
+        url = f'{self.admin_url}/healthcheck'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_ping(self):
+        url = f'{self.admin_url}/ping'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
