@@ -3,6 +3,7 @@ import argparse
 import traceback
 
 from colorama import Fore
+from icecream import ic
 
 from annorepo.client import AnnoRepoClient
 
@@ -23,6 +24,33 @@ def evaluate_task(name, method):
         failure_counter += 1
         print(f"{Fore.RED}failure:\n{traceback.format_exc()}{Fore.RESET}")
     print()
+
+
+def create_container_with_generated_name(client: AnnoRepoClient):
+    container_identifier = client.create_container()
+    ic(container_identifier)
+    result1 = client.read_container(container_identifier)
+    ic(result1)
+    result2 = client.delete_container(container_identifier)
+    ic(result2)
+    result3 = client.read_container(container_identifier)
+    ic(result3)
+    assert result3 is None
+    return result3
+
+
+def create_container_with_a_given_name(client: AnnoRepoClient):
+    container_identifier = client.create_container("test_container")
+    ic(container_identifier)
+    assert container_identifier == "test_container"
+    result = client.read_container(container_identifier)
+    ic(result)
+    result = client.delete_container(container_identifier)
+    ic(result)
+    result = client.read_container(container_identifier)
+    ic(result)
+    assert result is None
+    return result
 
 
 def main():
@@ -55,6 +83,8 @@ def main():
         evaluate_task('get_swagger_yaml', client.get_swagger_yaml)
         evaluate_task('get_healthcheck', client.get_healthcheck)
         evaluate_task('get_ping', client.get_ping)
+        evaluate_task('test_container_with_generated_name', lambda: create_container_with_generated_name(client))
+        evaluate_task('test_container_with_given_name', lambda: create_container_with_a_given_name(client))
 
         print()
         print(f"{Fore.BLUE}{success_counter + failure_counter} tasks run:{Fore.RESET}")

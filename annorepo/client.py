@@ -2,6 +2,7 @@ import http
 from http import HTTPStatus
 
 import requests
+from icecream import ic
 from requests import Response
 
 import annorepo
@@ -23,39 +24,106 @@ class AnnoRepoClient:
         return self.__str__()
 
     def get_about(self):
+        """Read the about info
+
+        :return: The about info as json
+        """
         url = f'{self.base_url}/about'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def get_homepage(self):
+        """Read the homepage
+
+        :return: The homepage as html
+        """
         url = f'{self.base_url}/'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_robots_txt(self):
+        """Read the robots.txt
+
+        :return: The contents of the robots.txt file
+        """
         url = f'{self.base_url}/robots.txt'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_favicon(self):
+        """Read the favicon.ico
+
+        :return:
+        """
         url = f'{self.base_url}/favicon.ico'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_swagger_json(self):
+        """Read the swagger info (as json)
+
+        :return: The swagger info as json
+        """
         url = f'{self.base_url}/swagger.json'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def get_swagger_yaml(self):
+        """Read the swagger info (as yaml)
+
+        :return: The swagger info as yaml
+        """
         url = f'{self.base_url}/swagger.yaml'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_healthcheck(self):
+        """Do the healthcheck
+
+        :return: The healthcheck info as json
+        """
         url = f'{self.admin_url}/healthcheck'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def create_container(self, name: str = None):
+        """Create a new Annotation Container
+
+        :param name: Optional name for the container (may be overruled)
+        :return: The container identifier
+        """
+        url = f'{self.base_url}/w3c'
+        headers = {}
+        if name:
+            headers['slug'] = name
+        response = self.__post(url=url, headers=headers)
+        ic(response.headers)
+        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.headers['Location'].split('/')[-1]})
+
+    def read_container(self, container_name: str):
+        """Read information about an existing Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :return: Information about the container
+        """
+        url = f'{self.base_url}/w3c/{container_name}'
+        response = self.__get(url=url)
+        ic(response)
+        return self.__handle_response(response,
+                                      {
+                                          HTTPStatus.OK: lambda r: r.json(),
+                                          HTTPStatus.NOT_FOUND: lambda r: None
+                                      })
+
+    def delete_container(self, container_name: str):
+        """Remove the Annotation Container with the given identifier, provided it is empty
+
+        :param container_name:
+        :return:
+        """
+        url = f'{self.base_url}/w3c/{container_name}'
+        response = self.__delete(url=url)
+        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def get_ping(self):
         url = f'{self.admin_url}/ping'

@@ -20,6 +20,7 @@ packages = [{ include = "annorepo" }]
 python = "^3.7"
 requests = "^2.27.1"
 colorama = "^0.4.4"
+icecream = "^2.1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
