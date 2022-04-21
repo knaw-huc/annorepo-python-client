@@ -7,7 +7,6 @@ from icecream import ic
 from requests import Response
 
 import annorepo
-from annorepo.container import Container
 
 
 class AnnoRepoClient:
@@ -218,7 +217,3 @@ class AnnoRepoClient:
             raise Exception(
                 f'{response.request.method} {response.request.url} returned {status_code} {status_message}'
                 + f': "{response.text}"')
-
-    def __to_container(self, response: Response) -> Container:
-        name = response.headers['Location'].split('/')[-1]
-        return Container(self.base_url, name)
