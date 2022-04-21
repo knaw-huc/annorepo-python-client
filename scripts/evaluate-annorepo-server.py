@@ -10,6 +10,16 @@ from annorepo.client import AnnoRepoClient
 success_counter = 0
 failure_counter = 0
 
+test_annotation = {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "type": "Annotation",
+    "body": {
+        "type": "TextualBody",
+        "value": "I like this page!"
+    },
+    "target": "http://www.example.com/index.html"
+}
+
 
 def evaluate_task(name, method):
     global failure_counter, success_counter
@@ -27,27 +37,83 @@ def evaluate_task(name, method):
 
 
 def create_container_with_generated_name(client: AnnoRepoClient):
-    container_identifier = client.create_container()
-    ic(container_identifier)
-    result1 = client.read_container(container_identifier)
+    container_data = client.create_container()
+    ic(container_data)
+    container_name = container_data['name']
+    ic(container_name)
+    result1 = client.read_container(container_name)
     ic(result1)
-    result2 = client.delete_container(container_identifier)
+    result2 = client.delete_container(container_name)
     ic(result2)
-    result3 = client.read_container(container_identifier)
+    result3 = client.read_container(container_name)
     ic(result3)
     assert result3 is None
     return result3
 
 
 def create_container_with_a_given_name(client: AnnoRepoClient):
-    container_identifier = client.create_container("test_container")
-    ic(container_identifier)
-    assert container_identifier == "test_container"
-    result = client.read_container(container_identifier)
+    container_data = client.create_container("test_container")
+    ic(container_data)
+    container_name = container_data['name']
+    ic(container_name)
+    # assert container_name == "test_container"
+    result = client.read_container(container_name)
     ic(result)
-    result = client.delete_container(container_identifier)
+    result = client.delete_container(container_name)
     ic(result)
-    result = client.read_container(container_identifier)
+    result = client.read_container(container_name)
+    ic(result)
+    assert result is None
+    return result
+
+
+def create_annotation_with_generated_name(client: AnnoRepoClient):
+    container_data = client.create_container()
+    ic(container_data)
+    container_name = container_data['name']
+    ic(container_name)
+
+    annotation_data = client.add_annotation(container_name=container_name, content=test_annotation)
+    ic(annotation_data)
+    annotation_name = annotation_data['name']
+
+    result = client.read_annotation(container_name, annotation_name)
+    ic(result)
+
+    result = client.delete_annotation(container_name, annotation_name)
+    ic(result)
+
+    result = client.delete_container(container_name)
+    ic(result)
+
+    result = client.read_container(container_name)
+    ic(result)
+    assert result is None
+    return result
+
+
+def create_annotation_with_a_given_name(client: AnnoRepoClient):
+    given_annotation_name = "my-annotation"
+    container_data = client.create_container()
+    ic(container_data)
+    container_name = container_data['name']
+    ic(container_name)
+
+    annotation_data = client.add_annotation(container_name=container_name, content=test_annotation,
+                                            name=given_annotation_name)
+    ic(annotation_data)
+    annotation_name = annotation_data['name']
+
+    result = client.read_annotation(container_name, annotation_name)
+    ic(result)
+
+    result = client.delete_annotation(container_name, annotation_name)
+    ic(result)
+
+    result = client.delete_container(container_name)
+    ic(result)
+
+    result = client.read_container(container_name)
     ic(result)
     assert result is None
     return result
@@ -85,6 +151,8 @@ def main():
         evaluate_task('get_ping', client.get_ping)
         evaluate_task('test_container_with_generated_name', lambda: create_container_with_generated_name(client))
         evaluate_task('test_container_with_given_name', lambda: create_container_with_a_given_name(client))
+        evaluate_task('test_add_annotation_with_generated_name', lambda: create_annotation_with_generated_name(client))
+        evaluate_task('test_add_annotation_with_given_name', lambda: create_annotation_with_a_given_name(client))
 
         print()
         print(f"{Fore.BLUE}{success_counter + failure_counter} tasks run:{Fore.RESET}")

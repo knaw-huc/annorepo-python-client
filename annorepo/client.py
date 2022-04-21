@@ -1,11 +1,13 @@
 import http
 from http import HTTPStatus
+from typing import Dict, Any
 
 import requests
 from icecream import ic
 from requests import Response
 
 import annorepo
+from annorepo.container import Container
 
 
 class AnnoRepoClient:
@@ -90,7 +92,7 @@ class AnnoRepoClient:
         """Create a new Annotation Container
 
         :param name: Optional name for the container (may be overruled)
-        :return: The container identifier
+        :return: The Container
         """
         url = f'{self.base_url}/w3c'
         headers = {}
@@ -98,7 +100,7 @@ class AnnoRepoClient:
             headers['slug'] = name
         response = self.__post(url=url, headers=headers)
         ic(response.headers)
-        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.headers['Location'].split('/')[-1]})
+        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
 
     def read_container(self, container_name: str):
         """Read information about an existing Annotation Container with the given identifier
@@ -122,6 +124,49 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/w3c/{container_name}'
+        response = self.__delete(url=url)
+        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
+
+    def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
+        """Add an annotation to the given container
+
+        :param container_name:
+        :param content: The Web Annotation represented as a dict
+        :param name: optional annotation name
+        :return: annotation_identifier
+        """
+        url = f'{self.base_url}/w3c/{container_name}'
+        headers = {}
+        if name:
+            headers['slug'] = name
+        response = self.__post(url=url, headers=headers, json=content)
+        ic(response.headers)
+        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+
+    def read_annotation(self, container_name: str, annotation_name: str):
+        """Read information about an existing Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :param annotation_name: The annotation name
+        :return: Information about the annotation
+        """
+        url = f'{self.base_url}/w3c/{container_name}/{annotation_name}'
+        response = self.__get(url=url)
+        ic(response)
+        return self.__handle_response(response,
+                                      {
+                                          HTTPStatus.OK: lambda r: r.json(),
+                                          HTTPStatus.NOT_FOUND: lambda r: None
+                                      })
+
+    def delete_annotation(self, container_name: str, annotation_name: str):
+        """Remove the Annotation with the given name in the container with the given identifier
+
+        :param container_name: the container name
+        :param annotation_name: the annotation name
+        :return:
+        """
+        url = f'{self.base_url}/w3c/{container_name}/{annotation_name}'
         response = self.__delete(url=url)
         return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
@@ -173,3 +218,7 @@ class AnnoRepoClient:
             raise Exception(
                 f'{response.request.method} {response.request.url} returned {status_code} {status_message}'
                 + f': "{response.text}"')
+
+    def __to_container(self, response: Response) -> Container:
+        name = response.headers['Location'].split('/')[-1]
+        return Container(self.base_url, name)
