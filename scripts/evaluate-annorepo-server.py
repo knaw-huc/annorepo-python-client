@@ -8,7 +8,7 @@ from icecream import ic
 from annorepo.client import AnnoRepoClient
 
 success_counter = 0
-failure_counter = 0
+failures = []
 
 test_annotation = {
     "@context": "http://www.w3.org/ns/anno.jsonld",
@@ -22,7 +22,7 @@ test_annotation = {
 
 
 def evaluate_task(name, method):
-    global failure_counter, success_counter
+    global failures, success_counter
     print(f"{Fore.YELLOW}> {Fore.CYAN}{name}{Fore.YELLOW}:{Fore.RESET}")
     try:
         result = method()
@@ -31,7 +31,7 @@ def evaluate_task(name, method):
         print(f"{Fore.BLUE}method returned:{Fore.RESET}")
         print(result)
     except Exception:
-        failure_counter += 1
+        failures.append(name)
         print(f"{Fore.RED}failure:\n{traceback.format_exc()}{Fore.RESET}")
     print()
 
@@ -75,7 +75,7 @@ def create_annotation_with_generated_name(client: AnnoRepoClient):
 
     annotation_data = client.add_annotation(container_name=container_name, content=test_annotation)
     ic(annotation_data)
-    annotation_name = annotation_data['name']
+    annotation_name = annotation_data['id'].split('/')[-1]
 
     result = client.read_annotation(container_name, annotation_name)
     ic(result)
@@ -102,7 +102,7 @@ def create_annotation_with_a_given_name(client: AnnoRepoClient):
     annotation_data = client.add_annotation(container_name=container_name, content=test_annotation,
                                             name=given_annotation_name)
     ic(annotation_data)
-    annotation_name = annotation_data['name']
+    annotation_name = annotation_data['id'].split('/')[-1]
 
     result = client.read_annotation(container_name, annotation_name)
     ic(result)
@@ -154,10 +154,13 @@ def main():
         evaluate_task('test_add_annotation_with_generated_name', lambda: create_annotation_with_generated_name(client))
         evaluate_task('test_add_annotation_with_given_name', lambda: create_annotation_with_a_given_name(client))
 
+        failure_counter = len(failures)
         print()
         print(f"{Fore.BLUE}{success_counter + failure_counter} tasks run:{Fore.RESET}")
         print(f"  {Fore.GREEN}{success_counter} successes{Fore.RESET}")
         print(f"  {Fore.RED}{failure_counter} failures{Fore.RESET}")
+        for f in failures:
+            print(f"    {Fore.RED}- {f}{Fore.RESET}")
         print()
         print(f"{Fore.BLUE}evaluation done!{Fore.RESET}")
 
