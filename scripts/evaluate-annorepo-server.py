@@ -30,8 +30,9 @@ def evaluate_task(name, method):
         success_counter += 1
         print(f"{Fore.BLUE}method returned:{Fore.RESET}")
         print(result)
-    except Exception:
+    except Exception as e:
         failures.append(name)
+        print(e)
         print(f"{Fore.RED}failure:\n{traceback.format_exc()}{Fore.RESET}")
     print()
 
@@ -147,6 +148,8 @@ def main():
         evaluate_task('get_robots_txt', client.get_robots_txt)
         evaluate_task('get_swagger_json', client.get_swagger_json)
         evaluate_task('get_swagger_yaml', client.get_swagger_yaml)
+        evaluate_task('get_openapi_json', client.get_openapi_json)
+        evaluate_task('get_openapi_yaml', client.get_openapi_yaml)
         evaluate_task('get_healthcheck', client.get_healthcheck)
         evaluate_task('get_ping', client.get_ping)
         evaluate_task('test_container_with_generated_name', lambda: create_container_with_generated_name(client))

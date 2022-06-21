@@ -77,6 +77,24 @@ class AnnoRepoClient:
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
+    def get_openapi_json(self):
+        """Read the openapi info (as json)
+
+        :return: The openapi info as json
+        """
+        url = f'{self.base_url}/openapi.json'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_openapi_yaml(self):
+        """Read the openapi info (as yaml)
+
+        :return: The openapi info as yaml
+        """
+        url = f'{self.base_url}/openapi.yaml'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
     def get_healthcheck(self):
         """Do the healthcheck
 
