@@ -3,7 +3,6 @@ from http import HTTPStatus
 from typing import Dict, Any
 
 import requests
-from icecream import ic
 from requests import Response
 
 import annorepo
@@ -98,7 +97,7 @@ class AnnoRepoClient:
         if name:
             headers['slug'] = name
         response = self.__post(url=url, headers=headers)
-        ic(response.headers)
+        # ic(response.headers)
         return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
 
     def read_container(self, container_name: str):
@@ -109,7 +108,7 @@ class AnnoRepoClient:
         """
         url = f'{self.base_url}/w3c/{container_name}'
         response = self.__get(url=url)
-        ic(response)
+        # ic(response)
         return self.__handle_response(response,
                                       {
                                           HTTPStatus.OK: lambda r: r.json(),
@@ -129,7 +128,7 @@ class AnnoRepoClient:
     def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
         """Add an annotation to the given container
 
-        :param container_name:
+        :param container_name: The container name
         :param content: The Web Annotation represented as a dict
         :param name: optional annotation name
         :return: annotation_identifier
@@ -139,8 +138,21 @@ class AnnoRepoClient:
         if name:
             headers['slug'] = name
         response = self.__post(url=url, headers=headers, json=content)
-        ic(response.headers)
+        # ic(response.headers)
         return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+
+    def add_annotations(self, container_name: str, annotation_list: list):
+        """Add annotations to the given container, in bulk
+
+        :param container_name: The container name
+        :param annotation_list: a list of Web Annotations, represented as dicts
+        :return: list of annotation_identifiers
+        """
+        url = f'{self.base_url}/batch/{container_name}/annotations/'
+        headers = {}
+        response = self.__post(url=url, headers=headers, json=annotation_list)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
+                                                 HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
 
     def read_annotation(self, container_name: str, annotation_name: str):
         """Read information about an existing Annotation Container with the given identifier
@@ -151,7 +163,7 @@ class AnnoRepoClient:
         """
         url = f'{self.base_url}/w3c/{container_name}/{annotation_name}'
         response = self.__get(url=url)
-        ic(response)
+        # ic(response)
         return self.__handle_response(response,
                                       {
                                           HTTPStatus.OK: lambda r: r.json(),
