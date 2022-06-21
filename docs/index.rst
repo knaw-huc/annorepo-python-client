@@ -3,7 +3,7 @@
 |an|
 ===============
 
-Python client to access an `AnnoRepo <https://github.com/brambg/annorepo>`_ server.
+Python client to access an `AnnoRepo <https://github.com/knaw-huc/annorepo>`_ server.
 
 
 Installation
@@ -35,14 +35,14 @@ Support
 
 If you are having issues, please let us know at:
 
-https://github.com/brambg/annorepo-python-client/issues
+https://github.com/knaw-huc/annorepo-python-client/issues
 
 Contribute
 ----------
 
 Want to improve the |an|? Submit a pull request at:
 
-https://github.com/brambg/annorepo-python-client
+https://github.com/knaw-huc/annorepo-python-client
 
 License
 -------

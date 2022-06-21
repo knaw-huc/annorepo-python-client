@@ -5,8 +5,8 @@ description = "A Python client for accessing an AnnoRepo server"
 authors = ["Bram Buitendijk <bram.buitendijk@di.huc.knaw.nl>"]
 readme = "README.md"
 license = "MIT"
-homepage = "https://github.com/brambg/annorepo-python-client"
-repository = "https://github.com/brambg/annorepo-python-client"
+homepage = "https://github.com/knaw-huc/annorepo-python-client"
+repository = "https://github.com/knaw-huc/annorepo-python-client"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
@@ -27,7 +27,7 @@ tabulate = "^0.8.9"
 pytest = "^6.2.5"
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/brambg/annorepo-python-client/issues"
+"Bug Tracker" = "https://github.com/knaw-huc/annorepo-python-client/issues"
 
 [tool.poetry.scripts]
 version = 'poetry_scripts:version'
