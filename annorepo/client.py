@@ -6,6 +6,7 @@ import requests
 from requests import Response
 
 import annorepo
+from annorepo.model import ContainerIdentifier
 
 
 class AnnoRepoClient:
@@ -104,21 +105,43 @@ class AnnoRepoClient:
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def create_container(self, name: str = None):
+    def has_container(self, name: str = None) -> bool:
+        """Check if a container with the given name exists
+
+        :param name: Name of the container
+        :return: True if a container with the given name exists, False otherwise
+        """
+        url = f'{self.base_url}/w3c/{name}'
+        response = self.__head(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda _: True, HTTPStatus.NOT_FOUND: lambda _: False})
+
+    def create_container(self, name: str = None, label: str = "A Container for Web Annotations") -> ContainerIdentifier:
         """Create a new Annotation Container
 
         :param name: Optional name for the container (may be overruled)
+        :param label: Label for the container (default: "A Container for Web Annotations")
         :return: The Container
         """
         url = f'{self.base_url}/w3c'
         headers = {}
         if name:
             headers['slug'] = name
-        response = self.__post(url=url, headers=headers)
+        specs = {
+            "@context": [
+                "http://www.w3.org/ns/anno.jsonld",
+                "http://www.w3.org/ns/ldp.jsonld"
+            ],
+            "type": [
+                "BasicContainer",
+                "AnnotationCollection"
+            ],
+            "label": label
+        }
+        response = self.__post(url=url, json=specs, headers=headers)
         # ic(response.headers)
         return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
 
-    def read_container(self, container_name: str):
+    def read_container(self, container_name: str) -> ContainerIdentifier:
         """Read information about an existing Annotation Container with the given identifier
 
         :param container_name: The container name
@@ -207,6 +230,10 @@ class AnnoRepoClient:
     def __get(self, url, params=None, **kwargs):
         args = self.__set_defaults(kwargs)
         return requests.get(url, params=params, **args)
+
+    def __head(self, url, params=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.head(url, params=params, **args)
 
     def __post(self, url, data=None, json=None, **kwargs):
         args = self.__set_defaults(kwargs)
