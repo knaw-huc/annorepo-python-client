@@ -26,4 +26,7 @@ pip install annorepo-client
 
 [USAGE](https://annorepo-python-client.readthedocs.io/en/latest/) |
 [CONTRIBUTING](CONTRIBUTING.md) |
-[LICENSE](LICENSE)
+[LICENSE](LICENSE) |
+[AUTHORS](AUTHORS) |
+[MAINTAINERS](MAINTAINERS) |
+[CONTRIBUTORS](CONTRIBUTORS)
