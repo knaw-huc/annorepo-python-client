@@ -1,3 +1,6 @@
+import requests
+
+
 class ContainerIdentifier:
     def __init__(self, url: str):
         if not url.endswith('/'):
