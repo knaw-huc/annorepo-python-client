@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>annorepo.client API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>annorepo.client</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import http
+from http import HTTPStatus
+from typing import Dict, Any
+
+import requests
+from icecream import ic
+from requests import Response
+
+import annorepo
+from annorepo.model import ContainerIdentifier
+
+
+class AnnoRepoClient:
+    def __init__(self, base_url: str, admin_url: str = None, timeout: int = None, api_key=None, verbose: bool = False):
+        self.api_key = api_key
+        self.base_url = base_url.strip(&#39;/&#39;)
+        self.admin_url = admin_url.strip(&#39;/&#39;) if admin_url else &#34;http://localhost:8081&#34;
+        self.raise_exception = True
+        self.timeout = timeout
+        self.verbose = verbose
+
+    def __str__(self):
+        return f&#39;AnnoRepoClient({self.base_url}, {self.admin_url})&#39;
+
+    def __repr__(self):
+        return self.__str__()
+
+    def get_about(self):
+        &#34;&#34;&#34;Read the about info
+
+        :return: The about info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/about&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_homepage(self):
+        &#34;&#34;&#34;Read the homepage
+
+        :return: The homepage as html
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_robots_txt(self):
+        &#34;&#34;&#34;Read the robots.txt
+
+        :return: The contents of the robots.txt file
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/robots.txt&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_favicon(self):
+        &#34;&#34;&#34;Read the favicon.ico
+
+        :return:
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/favicon.ico&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_swagger_json(self):
+        &#34;&#34;&#34;Read the swagger info (as json)
+
+        :return: The swagger info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/swagger.json&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_swagger_yaml(self):
+        &#34;&#34;&#34;Read the swagger info (as yaml)
+
+        :return: The swagger info as yaml
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/swagger.yaml&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_openapi_json(self):
+        &#34;&#34;&#34;Read the openapi info (as json)
+
+        :return: The openapi info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/openapi.json&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_openapi_yaml(self):
+        &#34;&#34;&#34;Read the openapi info (as yaml)
+
+        :return: The openapi info as yaml
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/openapi.yaml&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_healthcheck(self):
+        &#34;&#34;&#34;Do the healthcheck
+
+        :return: The healthcheck info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.admin_url}/healthcheck&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def has_container(self, name: str = None) -&gt; bool:
+        &#34;&#34;&#34;Check if a container with the given name exists
+
+        :param name: Name of the container
+        :return: True if a container with the given name exists, False otherwise
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{name}&#39;
+        response = self.__head(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda _: True, HTTPStatus.NOT_FOUND: lambda _: False})
+
+    def create_container(self, name: str = None, label: str = &#34;A Container for Web Annotations&#34;) -&gt; ContainerIdentifier:
+        &#34;&#34;&#34;Create a new Annotation Container
+
+        :param name: Optional name for the container (may be overruled)
+        :param label: Label for the container (default: &#34;A Container for Web Annotations&#34;)
+        :return: The Container
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c&#39;
+        headers = {}
+        if name:
+            headers[&#39;slug&#39;] = name
+        specs = {
+            &#34;@context&#34;: [
+                &#34;http://www.w3.org/ns/anno.jsonld&#34;,
+                &#34;http://www.w3.org/ns/ldp.jsonld&#34;
+            ],
+            &#34;type&#34;: [
+                &#34;BasicContainer&#34;,
+                &#34;AnnotationCollection&#34;
+            ],
+            &#34;label&#34;: label
+        }
+        response = self.__post(url=url, json=specs, headers=headers)
+        # ic(response.headers)
+        return self.__handle_response(response, {
+            HTTPStatus.CREATED: lambda r: (r.headers[&#34;etag&#34;], r.headers[&#34;location&#34;], r.json())})
+
+    def read_container(self, container_name: str) -&gt; ContainerIdentifier:
+        &#34;&#34;&#34;Read information about an existing Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :return: Information about the container
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+        response = self.__get(url=url)
+        # ic(response)
+        return self.__handle_response(response,
+                                      {
+                                          HTTPStatus.OK: lambda r: r.json(),
+                                          HTTPStatus.NOT_FOUND: lambda r: None
+                                      })
+
+    def delete_container(self, container_name: str, etag: str):
+        &#34;&#34;&#34;Remove the Annotation Container with the given identifier, provided it is empty
+
+        :param container_name:
+        :param etag:
+        :return:
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+        response = self.__delete(url=url, etag=etag)
+        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
+
+    def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
+        &#34;&#34;&#34;Add an annotation to the given container
+
+        :param container_name: The container name
+        :param content: The Web Annotation represented as a dict
+        :param name: optional annotation name
+        :return: annotation_identifier
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+        headers = {}
+        if name:
+            headers[&#39;slug&#39;] = name
+        response = self.__post(url=url, headers=headers, json=content)
+        # ic(response.headers)
+        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+
+    def add_annotations(self, container_name: str, annotation_list: list):
+        &#34;&#34;&#34;Add annotations to the given container, in bulk
+
+        :param container_name: The container name
+        :param annotation_list: a list of Web Annotations, represented as dicts
+        :return: list of annotation_identifiers
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/batch/{container_name}/annotations/&#39;
+        headers = {}
+        response = self.__post(url=url, headers=headers, json=annotation_list)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
+                                                 HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
+
+    def read_annotation(self, container_name: str, annotation_name: str):
+        &#34;&#34;&#34;Read information about an existing Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :param annotation_name: The annotation name
+        :return: Information about the annotation
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}/{annotation_name}&#39;
+        response = self.__get(url=url)
+        # ic(response)
+        return self.__handle_response(response,
+                                      {
+                                          HTTPStatus.OK: lambda r: r.json(),
+                                          HTTPStatus.NOT_FOUND: lambda r: None
+                                      })
+
+    def delete_annotation(self, container_name: str, annotation_name: str):
+        &#34;&#34;&#34;Remove the Annotation with the given name in the container with the given identifier
+
+        :param container_name: the container name
+        :param annotation_name: the annotation name
+        :return:
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}/{annotation_name}&#39;
+        response = self.__delete(url=url)
+        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
+
+    def get_ping(self):
+        url = f&#39;{self.admin_url}/ping&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def __get(self, url, params=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.get(url, params=params, **args)
+
+    def __head(self, url, params=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.head(url, params=params, **args)
+
+    def __post(self, url, data=None, json=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.post(url, data=data, json=json, **args)
+
+    def __put(self, url, data=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.put(url, data=data, **args)
+
+    def __delete(self, url, **kwargs):
+        ic(url)
+        ic(kwargs)
+        args = self.__set_defaults(kwargs)
+        return requests.delete(url, **args)
+
+    def __set_defaults(self, args: dict):
+        # ic(args)
+        if &#39;headers&#39; not in args:
+            args[&#39;headers&#39;] = {}
+        args[&#39;headers&#39;][&#39;User-Agent&#39;] = f&#39;annorepo-python-client/{annorepo.__version__}&#39;
+        if self.api_key:
+            args[&#39;headers&#39;][&#39;Authorization&#39;] = f&#39;Bearer {self.api_key}&#39;
+        if self.timeout:
+            args[&#39;timeout&#39;] = self.timeout
+        if &#39;etag&#39; in args:
+            args[&#39;headers&#39;][&#34;If-Match&#34;] = args.pop(&#39;etag&#39;)
+        return args
+
+    def __handle_response(self, response: Response, result_producers: dict):
+        status_code = response.status_code
+        status_message = http.client.responses[status_code]
+        # ic(response.request.headers)
+        if self.verbose:
+            print(f&#39;-&gt; {response.request.method} {response.request.url}&#39;)
+            print(f&#39;&lt;- {status_code} {status_message}&#39;)
+        if status_code in result_producers:
+            # if (self.raise_exceptions):
+            return result_producers[response.status_code](response)
+            # else:
+            #     return Success(response, result)
+        else:
+            # if (self.raise_exceptions):
+            raise Exception(
+                f&#39;{response.request.method} {response.request.url} returned {status_code} {status_message}&#39;
+                + f&#39;: &#34;{response.text}&#34;&#39;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="annorepo.client.AnnoRepoClient"><code class="flex name class">
+<span>class <span class="ident">AnnoRepoClient</span></span>
+<span>(</span><span>base_url: str, admin_url: str = None, timeout: int = None, api_key=None, verbose: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class AnnoRepoClient:
+    def __init__(self, base_url: str, admin_url: str = None, timeout: int = None, api_key=None, verbose: bool = False):
+        self.api_key = api_key
+        self.base_url = base_url.strip(&#39;/&#39;)
+        self.admin_url = admin_url.strip(&#39;/&#39;) if admin_url else &#34;http://localhost:8081&#34;
+        self.raise_exception = True
+        self.timeout = timeout
+        self.verbose = verbose
+
+    def __str__(self):
+        return f&#39;AnnoRepoClient({self.base_url}, {self.admin_url})&#39;
+
+    def __repr__(self):
+        return self.__str__()
+
+    def get_about(self):
+        &#34;&#34;&#34;Read the about info
+
+        :return: The about info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/about&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_homepage(self):
+        &#34;&#34;&#34;Read the homepage
+
+        :return: The homepage as html
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_robots_txt(self):
+        &#34;&#34;&#34;Read the robots.txt
+
+        :return: The contents of the robots.txt file
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/robots.txt&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_favicon(self):
+        &#34;&#34;&#34;Read the favicon.ico
+
+        :return:
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/favicon.ico&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_swagger_json(self):
+        &#34;&#34;&#34;Read the swagger info (as json)
+
+        :return: The swagger info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/swagger.json&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_swagger_yaml(self):
+        &#34;&#34;&#34;Read the swagger info (as yaml)
+
+        :return: The swagger info as yaml
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/swagger.yaml&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_openapi_json(self):
+        &#34;&#34;&#34;Read the openapi info (as json)
+
+        :return: The openapi info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/openapi.json&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def get_openapi_yaml(self):
+        &#34;&#34;&#34;Read the openapi info (as yaml)
+
+        :return: The openapi info as yaml
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/openapi.yaml&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def get_healthcheck(self):
+        &#34;&#34;&#34;Do the healthcheck
+
+        :return: The healthcheck info as json
+        &#34;&#34;&#34;
+        url = f&#39;{self.admin_url}/healthcheck&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def has_container(self, name: str = None) -&gt; bool:
+        &#34;&#34;&#34;Check if a container with the given name exists
+
+        :param name: Name of the container
+        :return: True if a container with the given name exists, False otherwise
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{name}&#39;
+        response = self.__head(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda _: True, HTTPStatus.NOT_FOUND: lambda _: False})
+
+    def create_container(self, name: str = None, label: str = &#34;A Container for Web Annotations&#34;) -&gt; ContainerIdentifier:
+        &#34;&#34;&#34;Create a new Annotation Container
+
+        :param name: Optional name for the container (may be overruled)
+        :param label: Label for the container (default: &#34;A Container for Web Annotations&#34;)
+        :return: The Container
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c&#39;
+        headers = {}
+        if name:
+            headers[&#39;slug&#39;] = name
+        specs = {
+            &#34;@context&#34;: [
+                &#34;http://www.w3.org/ns/anno.jsonld&#34;,
+                &#34;http://www.w3.org/ns/ldp.jsonld&#34;
+            ],
+            &#34;type&#34;: [
+                &#34;BasicContainer&#34;,
+                &#34;AnnotationCollection&#34;
+            ],
+            &#34;label&#34;: label
+        }
+        response = self.__post(url=url, json=specs, headers=headers)
+        # ic(response.headers)
+        return self.__handle_response(response, {
+            HTTPStatus.CREATED: lambda r: (r.headers[&#34;etag&#34;], r.headers[&#34;location&#34;], r.json())})
+
+    def read_container(self, container_name: str) -&gt; ContainerIdentifier:
+        &#34;&#34;&#34;Read information about an existing Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :return: Information about the container
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+        response = self.__get(url=url)
+        # ic(response)
+        return self.__handle_response(response,
+                                      {
+                                          HTTPStatus.OK: lambda r: r.json(),
+                                          HTTPStatus.NOT_FOUND: lambda r: None
+                                      })
+
+    def delete_container(self, container_name: str, etag: str):
+        &#34;&#34;&#34;Remove the Annotation Container with the given identifier, provided it is empty
+
+        :param container_name:
+        :param etag:
+        :return:
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+        response = self.__delete(url=url, etag=etag)
+        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
+
+    def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
+        &#34;&#34;&#34;Add an annotation to the given container
+
+        :param container_name: The container name
+        :param content: The Web Annotation represented as a dict
+        :param name: optional annotation name
+        :return: annotation_identifier
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+        headers = {}
+        if name:
+            headers[&#39;slug&#39;] = name
+        response = self.__post(url=url, headers=headers, json=content)
+        # ic(response.headers)
+        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+
+    def add_annotations(self, container_name: str, annotation_list: list):
+        &#34;&#34;&#34;Add annotations to the given container, in bulk
+
+        :param container_name: The container name
+        :param annotation_list: a list of Web Annotations, represented as dicts
+        :return: list of annotation_identifiers
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/batch/{container_name}/annotations/&#39;
+        headers = {}
+        response = self.__post(url=url, headers=headers, json=annotation_list)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
+                                                 HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
+
+    def read_annotation(self, container_name: str, annotation_name: str):
+        &#34;&#34;&#34;Read information about an existing Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :param annotation_name: The annotation name
+        :return: Information about the annotation
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}/{annotation_name}&#39;
+        response = self.__get(url=url)
+        # ic(response)
+        return self.__handle_response(response,
+                                      {
+                                          HTTPStatus.OK: lambda r: r.json(),
+                                          HTTPStatus.NOT_FOUND: lambda r: None
+                                      })
+
+    def delete_annotation(self, container_name: str, annotation_name: str):
+        &#34;&#34;&#34;Remove the Annotation with the given name in the container with the given identifier
+
+        :param container_name: the container name
+        :param annotation_name: the annotation name
+        :return:
+        &#34;&#34;&#34;
+        url = f&#39;{self.base_url}/w3c/{container_name}/{annotation_name}&#39;
+        response = self.__delete(url=url)
+        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
+
+    def get_ping(self):
+        url = f&#39;{self.admin_url}/ping&#39;
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def __get(self, url, params=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.get(url, params=params, **args)
+
+    def __head(self, url, params=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.head(url, params=params, **args)
+
+    def __post(self, url, data=None, json=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.post(url, data=data, json=json, **args)
+
+    def __put(self, url, data=None, **kwargs):
+        args = self.__set_defaults(kwargs)
+        return requests.put(url, data=data, **args)
+
+    def __delete(self, url, **kwargs):
+        ic(url)
+        ic(kwargs)
+        args = self.__set_defaults(kwargs)
+        return requests.delete(url, **args)
+
+    def __set_defaults(self, args: dict):
+        # ic(args)
+        if &#39;headers&#39; not in args:
+            args[&#39;headers&#39;] = {}
+        args[&#39;headers&#39;][&#39;User-Agent&#39;] = f&#39;annorepo-python-client/{annorepo.__version__}&#39;
+        if self.api_key:
+            args[&#39;headers&#39;][&#39;Authorization&#39;] = f&#39;Bearer {self.api_key}&#39;
+        if self.timeout:
+            args[&#39;timeout&#39;] = self.timeout
+        if &#39;etag&#39; in args:
+            args[&#39;headers&#39;][&#34;If-Match&#34;] = args.pop(&#39;etag&#39;)
+        return args
+
+    def __handle_response(self, response: Response, result_producers: dict):
+        status_code = response.status_code
+        status_message = http.client.responses[status_code]
+        # ic(response.request.headers)
+        if self.verbose:
+            print(f&#39;-&gt; {response.request.method} {response.request.url}&#39;)
+            print(f&#39;&lt;- {status_code} {status_message}&#39;)
+        if status_code in result_producers:
+            # if (self.raise_exceptions):
+            return result_producers[response.status_code](response)
+            # else:
+            #     return Success(response, result)
+        else:
+            # if (self.raise_exceptions):
+            raise Exception(
+                f&#39;{response.request.method} {response.request.url} returned {status_code} {status_message}&#39;
+                + f&#39;: &#34;{response.text}&#34;&#39;)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="annorepo.client.AnnoRepoClient.add_annotation"><code class="name flex">
+<span>def <span class="ident">add_annotation</span></span>(<span>self, container_name: str, content: Dict[str, Any], name: str = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add an annotation to the given container</p>
+<p>:param container_name: The container name
+:param content: The Web Annotation represented as a dict
+:param name: optional annotation name
+:return: annotation_identifier</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
+    &#34;&#34;&#34;Add an annotation to the given container
+
+    :param container_name: The container name
+    :param content: The Web Annotation represented as a dict
+    :param name: optional annotation name
+    :return: annotation_identifier
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+    headers = {}
+    if name:
+        headers[&#39;slug&#39;] = name
+    response = self.__post(url=url, headers=headers, json=content)
+    # ic(response.headers)
+    return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.add_annotations"><code class="name flex">
+<span>def <span class="ident">add_annotations</span></span>(<span>self, container_name: str, annotation_list: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add annotations to the given container, in bulk</p>
+<p>:param container_name: The container name
+:param annotation_list: a list of Web Annotations, represented as dicts
+:return: list of annotation_identifiers</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_annotations(self, container_name: str, annotation_list: list):
+    &#34;&#34;&#34;Add annotations to the given container, in bulk
+
+    :param container_name: The container name
+    :param annotation_list: a list of Web Annotations, represented as dicts
+    :return: list of annotation_identifiers
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/batch/{container_name}/annotations/&#39;
+    headers = {}
+    response = self.__post(url=url, headers=headers, json=annotation_list)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
+                                             HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.create_container"><code class="name flex">
+<span>def <span class="ident">create_container</span></span>(<span>self, name: str = None, label: str = 'A Container for Web Annotations') ‑> <a title="annorepo.model.ContainerIdentifier" href="model.html#annorepo.model.ContainerIdentifier">ContainerIdentifier</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a new Annotation Container</p>
+<p>:param name: Optional name for the container (may be overruled)
+:param label: Label for the container (default: "A Container for Web Annotations")
+:return: The Container</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_container(self, name: str = None, label: str = &#34;A Container for Web Annotations&#34;) -&gt; ContainerIdentifier:
+    &#34;&#34;&#34;Create a new Annotation Container
+
+    :param name: Optional name for the container (may be overruled)
+    :param label: Label for the container (default: &#34;A Container for Web Annotations&#34;)
+    :return: The Container
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/w3c&#39;
+    headers = {}
+    if name:
+        headers[&#39;slug&#39;] = name
+    specs = {
+        &#34;@context&#34;: [
+            &#34;http://www.w3.org/ns/anno.jsonld&#34;,
+            &#34;http://www.w3.org/ns/ldp.jsonld&#34;
+        ],
+        &#34;type&#34;: [
+            &#34;BasicContainer&#34;,
+            &#34;AnnotationCollection&#34;
+        ],
+        &#34;label&#34;: label
+    }
+    response = self.__post(url=url, json=specs, headers=headers)
+    # ic(response.headers)
+    return self.__handle_response(response, {
+        HTTPStatus.CREATED: lambda r: (r.headers[&#34;etag&#34;], r.headers[&#34;location&#34;], r.json())})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.delete_annotation"><code class="name flex">
+<span>def <span class="ident">delete_annotation</span></span>(<span>self, container_name: str, annotation_name: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove the Annotation with the given name in the container with the given identifier</p>
+<p>:param container_name: the container name
+:param annotation_name: the annotation name
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_annotation(self, container_name: str, annotation_name: str):
+    &#34;&#34;&#34;Remove the Annotation with the given name in the container with the given identifier
+
+    :param container_name: the container name
+    :param annotation_name: the annotation name
+    :return:
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/w3c/{container_name}/{annotation_name}&#39;
+    response = self.__delete(url=url)
+    return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.delete_container"><code class="name flex">
+<span>def <span class="ident">delete_container</span></span>(<span>self, container_name: str, etag: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Remove the Annotation Container with the given identifier, provided it is empty</p>
+<p>:param container_name:
+:param etag:
+:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_container(self, container_name: str, etag: str):
+    &#34;&#34;&#34;Remove the Annotation Container with the given identifier, provided it is empty
+
+    :param container_name:
+    :param etag:
+    :return:
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+    response = self.__delete(url=url, etag=etag)
+    return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_about"><code class="name flex">
+<span>def <span class="ident">get_about</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the about info</p>
+<p>:return: The about info as json</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_about(self):
+    &#34;&#34;&#34;Read the about info
+
+    :return: The about info as json
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/about&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_favicon"><code class="name flex">
+<span>def <span class="ident">get_favicon</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the favicon.ico</p>
+<p>:return:</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_favicon(self):
+    &#34;&#34;&#34;Read the favicon.ico
+
+    :return:
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/favicon.ico&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_healthcheck"><code class="name flex">
+<span>def <span class="ident">get_healthcheck</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Do the healthcheck</p>
+<p>:return: The healthcheck info as json</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_healthcheck(self):
+    &#34;&#34;&#34;Do the healthcheck
+
+    :return: The healthcheck info as json
+    &#34;&#34;&#34;
+    url = f&#39;{self.admin_url}/healthcheck&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_homepage"><code class="name flex">
+<span>def <span class="ident">get_homepage</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the homepage</p>
+<p>:return: The homepage as html</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_homepage(self):
+    &#34;&#34;&#34;Read the homepage
+
+    :return: The homepage as html
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_openapi_json"><code class="name flex">
+<span>def <span class="ident">get_openapi_json</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the openapi info (as json)</p>
+<p>:return: The openapi info as json</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_openapi_json(self):
+    &#34;&#34;&#34;Read the openapi info (as json)
+
+    :return: The openapi info as json
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/openapi.json&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_openapi_yaml"><code class="name flex">
+<span>def <span class="ident">get_openapi_yaml</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the openapi info (as yaml)</p>
+<p>:return: The openapi info as yaml</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_openapi_yaml(self):
+    &#34;&#34;&#34;Read the openapi info (as yaml)
+
+    :return: The openapi info as yaml
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/openapi.yaml&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_ping"><code class="name flex">
+<span>def <span class="ident">get_ping</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_ping(self):
+    url = f&#39;{self.admin_url}/ping&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_robots_txt"><code class="name flex">
+<span>def <span class="ident">get_robots_txt</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the robots.txt</p>
+<p>:return: The contents of the robots.txt file</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_robots_txt(self):
+    &#34;&#34;&#34;Read the robots.txt
+
+    :return: The contents of the robots.txt file
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/robots.txt&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_swagger_json"><code class="name flex">
+<span>def <span class="ident">get_swagger_json</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the swagger info (as json)</p>
+<p>:return: The swagger info as json</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_swagger_json(self):
+    &#34;&#34;&#34;Read the swagger info (as json)
+
+    :return: The swagger info as json
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/swagger.json&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.get_swagger_yaml"><code class="name flex">
+<span>def <span class="ident">get_swagger_yaml</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the swagger info (as yaml)</p>
+<p>:return: The swagger info as yaml</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_swagger_yaml(self):
+    &#34;&#34;&#34;Read the swagger info (as yaml)
+
+    :return: The swagger info as yaml
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/swagger.yaml&#39;
+    response = self.__get(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.has_container"><code class="name flex">
+<span>def <span class="ident">has_container</span></span>(<span>self, name: str = None) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check if a container with the given name exists</p>
+<p>:param name: Name of the container
+:return: True if a container with the given name exists, False otherwise</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def has_container(self, name: str = None) -&gt; bool:
+    &#34;&#34;&#34;Check if a container with the given name exists
+
+    :param name: Name of the container
+    :return: True if a container with the given name exists, False otherwise
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/w3c/{name}&#39;
+    response = self.__head(url=url)
+    return self.__handle_response(response, {HTTPStatus.OK: lambda _: True, HTTPStatus.NOT_FOUND: lambda _: False})</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.read_annotation"><code class="name flex">
+<span>def <span class="ident">read_annotation</span></span>(<span>self, container_name: str, annotation_name: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read information about an existing Annotation Container with the given identifier</p>
+<p>:param container_name: The container name
+:param annotation_name: The annotation name
+:return: Information about the annotation</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_annotation(self, container_name: str, annotation_name: str):
+    &#34;&#34;&#34;Read information about an existing Annotation Container with the given identifier
+
+    :param container_name: The container name
+    :param annotation_name: The annotation name
+    :return: Information about the annotation
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/w3c/{container_name}/{annotation_name}&#39;
+    response = self.__get(url=url)
+    # ic(response)
+    return self.__handle_response(response,
+                                  {
+                                      HTTPStatus.OK: lambda r: r.json(),
+                                      HTTPStatus.NOT_FOUND: lambda r: None
+                                  })</code></pre>
+</details>
+</dd>
+<dt id="annorepo.client.AnnoRepoClient.read_container"><code class="name flex">
+<span>def <span class="ident">read_container</span></span>(<span>self, container_name: str) ‑> <a title="annorepo.model.ContainerIdentifier" href="model.html#annorepo.model.ContainerIdentifier">ContainerIdentifier</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read information about an existing Annotation Container with the given identifier</p>
+<p>:param container_name: The container name
+:return: Information about the container</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_container(self, container_name: str) -&gt; ContainerIdentifier:
+    &#34;&#34;&#34;Read information about an existing Annotation Container with the given identifier
+
+    :param container_name: The container name
+    :return: Information about the container
+    &#34;&#34;&#34;
+    url = f&#39;{self.base_url}/w3c/{container_name}&#39;
+    response = self.__get(url=url)
+    # ic(response)
+    return self.__handle_response(response,
+                                  {
+                                      HTTPStatus.OK: lambda r: r.json(),
+                                      HTTPStatus.NOT_FOUND: lambda r: None
+                                  })</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="annorepo" href="index.html">annorepo</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="annorepo.client.AnnoRepoClient" href="#annorepo.client.AnnoRepoClient">AnnoRepoClient</a></code></h4>
+<ul class="two-column">
+<li><code><a title="annorepo.client.AnnoRepoClient.add_annotation" href="#annorepo.client.AnnoRepoClient.add_annotation">add_annotation</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.add_annotations" href="#annorepo.client.AnnoRepoClient.add_annotations">add_annotations</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.create_container" href="#annorepo.client.AnnoRepoClient.create_container">create_container</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.delete_annotation" href="#annorepo.client.AnnoRepoClient.delete_annotation">delete_annotation</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.delete_container" href="#annorepo.client.AnnoRepoClient.delete_container">delete_container</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_about" href="#annorepo.client.AnnoRepoClient.get_about">get_about</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_favicon" href="#annorepo.client.AnnoRepoClient.get_favicon">get_favicon</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_healthcheck" href="#annorepo.client.AnnoRepoClient.get_healthcheck">get_healthcheck</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_homepage" href="#annorepo.client.AnnoRepoClient.get_homepage">get_homepage</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_openapi_json" href="#annorepo.client.AnnoRepoClient.get_openapi_json">get_openapi_json</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_openapi_yaml" href="#annorepo.client.AnnoRepoClient.get_openapi_yaml">get_openapi_yaml</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_ping" href="#annorepo.client.AnnoRepoClient.get_ping">get_ping</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_robots_txt" href="#annorepo.client.AnnoRepoClient.get_robots_txt">get_robots_txt</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_swagger_json" href="#annorepo.client.AnnoRepoClient.get_swagger_json">get_swagger_json</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.get_swagger_yaml" href="#annorepo.client.AnnoRepoClient.get_swagger_yaml">get_swagger_yaml</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.has_container" href="#annorepo.client.AnnoRepoClient.has_container">has_container</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.read_annotation" href="#annorepo.client.AnnoRepoClient.read_annotation">read_annotation</a></code></li>
+<li><code><a title="annorepo.client.AnnoRepoClient.read_container" href="#annorepo.client.AnnoRepoClient.read_container">read_container</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
