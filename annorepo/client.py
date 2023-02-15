@@ -3,6 +3,7 @@ from http import HTTPStatus
 from typing import Dict, Any
 
 import requests
+from icecream import ic
 from requests import Response
 
 import annorepo
@@ -139,7 +140,8 @@ class AnnoRepoClient:
         }
         response = self.__post(url=url, json=specs, headers=headers)
         # ic(response.headers)
-        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+        return self.__handle_response(response, {
+            HTTPStatus.CREATED: lambda r: (r.headers["etag"], r.headers["location"], r.json())})
 
     def read_container(self, container_name: str) -> ContainerIdentifier:
         """Read information about an existing Annotation Container with the given identifier
@@ -156,14 +158,15 @@ class AnnoRepoClient:
                                           HTTPStatus.NOT_FOUND: lambda r: None
                                       })
 
-    def delete_container(self, container_name: str):
+    def delete_container(self, container_name: str, etag: str):
         """Remove the Annotation Container with the given identifier, provided it is empty
 
         :param container_name:
+        :param etag:
         :return:
         """
         url = f'{self.base_url}/w3c/{container_name}'
-        response = self.__delete(url=url)
+        response = self.__delete(url=url, etag=etag)
         return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
@@ -244,17 +247,22 @@ class AnnoRepoClient:
         return requests.put(url, data=data, **args)
 
     def __delete(self, url, **kwargs):
+        ic(url)
+        ic(kwargs)
         args = self.__set_defaults(kwargs)
         return requests.delete(url, **args)
 
     def __set_defaults(self, args: dict):
+        # ic(args)
         if 'headers' not in args:
             args['headers'] = {}
         args['headers']['User-Agent'] = f'annorepo-python-client/{annorepo.__version__}'
         if self.api_key:
-            args['headers']['Authorization'] = f'Basic {self.api_key}'
+            args['headers']['Authorization'] = f'Bearer {self.api_key}'
         if self.timeout:
             args['timeout'] = self.timeout
+        if 'etag' in args:
+            args['headers']["If-Match"] = args.pop('etag')
         return args
 
     def __handle_response(self, response: Response, result_producers: dict):
