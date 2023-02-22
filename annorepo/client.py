@@ -1,4 +1,5 @@
 import http
+from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Dict, Any
 
@@ -8,6 +9,13 @@ from requests import Response
 
 import annorepo
 from annorepo.model import ContainerIdentifier
+
+
+@dataclass
+class SearchInfo:
+    id: str
+    location: str
+    hits: int
 
 
 class AnnoRepoClient:
@@ -169,6 +177,16 @@ class AnnoRepoClient:
         response = self.__delete(url=url, etag=etag)
         return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
+    def read_container_metadata(self, container_name: str):
+        """Read metadata from the  Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :return: A Dict containing the metadata
+        """
+        url = f'{self.base_url}/services/{container_name}/metadata'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
     def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
         """Add an annotation to the given container
 
@@ -226,9 +244,55 @@ class AnnoRepoClient:
         return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def get_ping(self):
+        """Ping the server to see if it's active
+
+        :return:
+        """
         url = f'{self.admin_url}/ping'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+
+    def create_search(self, container_name: str, query: Dict[str, Any]) -> SearchInfo:
+        """
+
+        :param container_name: the container name
+        :param query:
+        :return:
+        """
+
+        def to_search_info(response: Response) -> SearchInfo:
+            location = response.headers["location"]
+            search_id = location.split("/")[-1]
+            hits = response.json()["hits"]
+            return SearchInfo(id=search_id, location=location, hits=hits)
+
+        url = f'{self.base_url}/services/{container_name}/search'
+        response = self.__post(url=url, json=query)
+        return self.__handle_response(response, {HTTPStatus.CREATED: to_search_info})
+
+    def read_search_result_page(self, container_name: str, search_id: str, page: int = 0):
+        """
+
+        :param container_name: the container name
+        :param search_id:
+        :param page:
+        :return:
+        """
+        url = f'{self.base_url}/services/{container_name}/search/{search_id}'
+        params = {"page": page}
+        response = self.__get(url=url, params=params)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_search_info(self, container_name: str, search_id: str):
+        """
+
+        :param container_name: the container name
+        :param search_id:
+        :return:
+        """
+        url = f'{self.base_url}/services/{container_name}/search/{search_id}/info'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def __get(self, url, params=None, **kwargs):
         args = self.__set_defaults(kwargs)
