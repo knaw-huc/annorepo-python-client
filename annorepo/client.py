@@ -260,10 +260,10 @@ class AnnoRepoClient:
         :return:
         """
 
-        def to_search_info(response: Response) -> SearchInfo:
-            location = response.headers["location"]
+        def to_search_info(_response: Response) -> SearchInfo:
+            location = _response.headers["location"]
             search_id = location.split("/")[-1]
-            hits = response.json()["hits"]
+            hits = _response.json()["hits"]
             return SearchInfo(id=search_id, location=location, hits=hits)
 
         url = f'{self.base_url}/services/{container_name}/search'
@@ -346,3 +346,46 @@ class AnnoRepoClient:
             raise Exception(
                 f'{response.request.method} {response.request.url} returned {status_code} {status_message}'
                 + f': "{response.text}"')
+
+
+class ContainerAdapter:
+
+    def __init__(self, ar_client: AnnoRepoClient, container_name: str):
+        self.client = ar_client
+        self.container_name = container_name
+
+    def exists(self) -> bool:
+        return self.client.has_container(name=self.container_name)
+
+    def create(self, label: str) -> ContainerIdentifier:
+        return self.client.create_container(name=self.container_name, label=label)
+
+    def read(self) -> ContainerIdentifier:
+        return self.client.read_container(container_name=self.container_name)
+
+    def delete(self, etag: str):
+        return self.client.delete_container(container_name=self.container_name, etag=etag)
+
+    def read_metadata(self):
+        return self.client.read_container_metadata(container_name=self.container_name)
+
+    def add_annotation(self, content: Dict[str, Any], name: str):
+        return self.client.add_annotation(container_name=self.container_name, content=content, name=name)
+
+    def add_annotations(self, annotation_list: list):
+        return self.client.add_annotations(container_name=self.container_name, annotation_list=annotation_list)
+
+    def read_annotation(self, annotation_name: str):
+        return self.client.read_annotation(container_name=self.container_name, annotation_name=annotation_name)
+
+    def delete_annotation(self, annotation_name: str):
+        return self.client.delete_annotation(container_name=self.container_name, annotation_name=annotation_name)
+
+    def create_search(self, query: Dict[str, Any]) -> SearchInfo:
+        return self.client.create_search(container_name=self.container_name, query=query)
+
+    def read_search_result_page(self, search_id: str, page: int = 0):
+        return self.client.read_search_result_page(container_name=self.container_name, search_id=search_id, page=page)
+
+    def read_search_info(self, search_id: str):
+        return self.client.read_search_info(container_name=self.container_name, search_id=search_id)
