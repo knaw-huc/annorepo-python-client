@@ -7,6 +7,7 @@ pdoc:
 
 .PHONY: install
 install:
+	poetry lock
 	poetry install
 
 
