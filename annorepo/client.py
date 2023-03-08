@@ -294,6 +294,9 @@ class AnnoRepoClient:
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
+    def container_adapter(self, container_name: str) -> 'ContainerAdapter':
+        return ContainerAdapter(self, container_name)
+
     def __get(self, url, params=None, **kwargs):
         args = self.__set_defaults(kwargs)
         return requests.get(url, params=params, **args)
