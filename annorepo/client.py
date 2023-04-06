@@ -1,7 +1,7 @@
 import http
 from dataclasses import dataclass
 from http import HTTPStatus
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 import requests
 from icecream import ic
@@ -291,6 +291,15 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/services/{container_name}/search/{search_id}/info'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_accessible_containers(self) -> Dict[str, List[str]]:
+        """
+
+        :return:
+        """
+        url = f'{self.base_url}/my/containers'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 

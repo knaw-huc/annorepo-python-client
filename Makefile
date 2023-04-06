@@ -10,7 +10,6 @@ install:
 	poetry lock
 	poetry install
 
-
 .PHONY: help
 help:
 	@echo "make-tools for annorepo-client"
