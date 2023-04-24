@@ -252,6 +252,14 @@ class AnnoRepoClient:
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
+    def get_users(self):
+        """
+        :return:
+        """
+        url = f'{self.base_url}/admin/users'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
     def create_search(self, container_name: str, query: Dict[str, Any]) -> SearchInfo:
         """
 
@@ -291,6 +299,44 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/services/{container_name}/search/{search_id}/info'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def create_global_search(self, query: Dict[str, Any]) -> SearchInfo:
+        """
+
+        :param query:
+        :return:
+        """
+
+        def to_search_info(_response: Response) -> SearchInfo:
+            location = _response.headers["location"]
+            search_id = location.split("/")[-1]
+            return SearchInfo(id=search_id, location=location, hits=0)
+
+        url = f'{self.base_url}/global/search'
+        response = self.__post(url=url, json=query)
+        return self.__handle_response(response, {HTTPStatus.CREATED: to_search_info})
+
+    def read_global_search_result_page(self, search_id: str, page: int = 0):
+        """
+
+        :param search_id:
+        :param page:
+        :return:
+        """
+        url = f'{self.base_url}/global/search/{search_id}'
+        params = {"page": page}
+        response = self.__get(url=url, params=params)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_global_search_status(self, search_id: str):
+        """
+
+        :param search_id:
+        :return:
+        """
+        url = f'{self.base_url}/global/search/{search_id}/status'
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
