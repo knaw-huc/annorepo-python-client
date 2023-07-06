@@ -3,12 +3,11 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Dict, Any, List
 
+import annorepo
 import requests
+from annorepo.model import ContainerIdentifier
 from icecream import ic
 from requests import Response
-
-import annorepo
-from annorepo.model import ContainerIdentifier
 
 
 @dataclass
@@ -349,6 +348,26 @@ class AnnoRepoClient:
         response = self.__get(url=url)
         return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
+    def create_index(self, container_name: str, field: str, index_type: str):
+        url = f'{self.base_url}/services/{container_name}/indexes/{field}/{index_type}'
+        response = self.__put(url=url)
+        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+
+    def read_indexes(self, container_name: str):
+        url = f'{self.base_url}/services/{container_name}/indexes'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_index_status(self, container_name: str, field: str, index_type: str):
+        url = f'{self.base_url}/services/{container_name}/indexes/{field}/{index_type}/status'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_distinct_values(self, container_name: str, field: str):
+        url = f'{self.base_url}/services/{container_name}/distinct-values/{field}'
+        response = self.__get(url=url)
+        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
     def container_adapter(self, container_name: str) -> 'ContainerAdapter':
         return ContainerAdapter(self, container_name)
 
@@ -447,3 +466,15 @@ class ContainerAdapter:
 
     def read_search_info(self, search_id: str):
         return self.client.read_search_info(container_name=self.container_name, search_id=search_id)
+
+    def create_index(self, field: str, index_type: str):
+        return self.client.create_index(container_name=self.container_name, field=field, index_type=index_type)
+
+    def read_indexes(self):
+        return self.client.read_indexes(container_name=self.container_name)
+
+    def read_index_status(self, field: str, index_type: str):
+        return self.client.read_index_status(container_name=self.container_name, field=field, index_type=index_type)
+
+    def read_distinct_values(self, field: str):
+        return self.client.read_distinct_values(container_name=self.container_name, field=field)
