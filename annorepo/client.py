@@ -50,8 +50,8 @@ class AnnoRepoClient:
         :return: The about info as json
         """
         url = f'{self.base_url}/about'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def get_homepage(self):
         """Read the homepage
@@ -59,8 +59,8 @@ class AnnoRepoClient:
         :return: The homepage as html
         """
         url = f'{self.base_url}/'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_robots_txt(self):
         """Read the robots.txt
@@ -68,8 +68,8 @@ class AnnoRepoClient:
         :return: The contents of the robots.txt file
         """
         url = f'{self.base_url}/robots.txt'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_favicon(self):
         """Read the favicon.ico
@@ -77,8 +77,8 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/favicon.ico'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_swagger_json(self):
         """Read the swagger info (as json)
@@ -86,8 +86,8 @@ class AnnoRepoClient:
         :return: The swagger info as json
         """
         url = f'{self.base_url}/swagger.json'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def get_swagger_yaml(self):
         """Read the swagger info (as yaml)
@@ -95,8 +95,8 @@ class AnnoRepoClient:
         :return: The swagger info as yaml
         """
         url = f'{self.base_url}/swagger.yaml'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_openapi_json(self):
         """Read the openapi info (as json)
@@ -104,8 +104,8 @@ class AnnoRepoClient:
         :return: The openapi info as json
         """
         url = f'{self.base_url}/openapi.json'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def get_openapi_yaml(self):
         """Read the openapi info (as yaml)
@@ -113,8 +113,8 @@ class AnnoRepoClient:
         :return: The openapi info as yaml
         """
         url = f'{self.base_url}/openapi.yaml'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_healthcheck(self):
         """Do the healthcheck
@@ -122,8 +122,8 @@ class AnnoRepoClient:
         :return: The healthcheck info as json
         """
         url = f'{self.admin_url}/healthcheck'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def has_container(self, name: str = None) -> bool:
         """Check if a container with the given name exists
@@ -132,8 +132,8 @@ class AnnoRepoClient:
         :return: True if a container with the given name exists, False otherwise
         """
         url = f'{self.base_url}/w3c/{name}'
-        response = self.__head(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda _: True, HTTPStatus.NOT_FOUND: lambda _: False})
+        response = self._head(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda _: True, HTTPStatus.NOT_FOUND: lambda _: False})
 
     def create_container(self, name: str = None, label: str = "A Container for Web Annotations") -> ContainerIdentifier:
         """Create a new Annotation Container
@@ -157,9 +157,9 @@ class AnnoRepoClient:
             ],
             "label": label
         }
-        response = self.__post(url=url, json=specs, headers=headers)
+        response = self._post(url=url, json=specs, headers=headers)
         # ic(response.headers)
-        return self.__handle_response(response, {
+        return self._handle_response(response, {
             HTTPStatus.CREATED: lambda r: (r.headers["etag"], r.headers["location"], r.json())})
 
     def read_container(self, container_name: str) -> ContainerIdentifier:
@@ -169,13 +169,13 @@ class AnnoRepoClient:
         :return: Information about the container
         """
         url = f'{self.base_url}/w3c/{container_name}'
-        response = self.__get(url=url)
+        response = self._get(url=url)
         # ic(response)
-        return self.__handle_response(response,
-                                      {
-                                          HTTPStatus.OK: lambda r: r.json(),
-                                          HTTPStatus.NOT_FOUND: lambda r: None
-                                      })
+        return self._handle_response(response,
+                                     {
+                                         HTTPStatus.OK: lambda r: r.json(),
+                                         HTTPStatus.NOT_FOUND: lambda r: None
+                                     })
 
     def delete_container(self, container_name: str, etag: str):
         """Remove the Annotation Container with the given identifier, provided it is empty
@@ -185,8 +185,8 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/w3c/{container_name}'
-        response = self.__delete(url=url, etag=etag)
-        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
+        response = self._delete(url=url, etag=etag)
+        return self._handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def read_container_metadata(self, container_name: str):
         """Read metadata from the  Annotation Container with the given identifier
@@ -195,8 +195,8 @@ class AnnoRepoClient:
         :return: A Dict containing the metadata
         """
         url = f'{self.base_url}/services/{container_name}/metadata'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
         """Add an annotation to the given container
@@ -210,9 +210,9 @@ class AnnoRepoClient:
         headers = {}
         if name:
             headers['slug'] = name
-        response = self.__post(url=url, headers=headers, json=content)
+        response = self._post(url=url, headers=headers, json=content)
         # ic(response.headers)
-        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+        return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
 
     def add_annotations(self, container_name: str, annotation_list: list):
         """Add annotations to the given container, in bulk
@@ -223,9 +223,9 @@ class AnnoRepoClient:
         """
         url = f'{self.base_url}/batch/{container_name}/annotations/'
         headers = {}
-        response = self.__post(url=url, headers=headers, json=annotation_list)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
-                                                 HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
+        response = self._post(url=url, headers=headers, json=annotation_list)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
+                                                HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
 
     def read_annotation(self, container_name: str, annotation_name: str):
         """Read information about an existing Annotation Container with the given identifier
@@ -235,13 +235,13 @@ class AnnoRepoClient:
         :return: Information about the annotation
         """
         url = f'{self.base_url}/w3c/{container_name}/{annotation_name}'
-        response = self.__get(url=url)
+        response = self._get(url=url)
         # ic(response)
-        return self.__handle_response(response,
-                                      {
-                                          HTTPStatus.OK: lambda r: r.json(),
-                                          HTTPStatus.NOT_FOUND: lambda r: None
-                                      })
+        return self._handle_response(response,
+                                     {
+                                         HTTPStatus.OK: lambda r: r.json(),
+                                         HTTPStatus.NOT_FOUND: lambda r: None
+                                     })
 
     def delete_annotation(self, container_name: str, annotation_name: str):
         """Remove the Annotation with the given name in the container with the given identifier
@@ -251,8 +251,8 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/w3c/{container_name}/{annotation_name}'
-        response = self.__delete(url=url)
-        return self.__handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
+        response = self._delete(url=url)
+        return self._handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def get_ping(self):
         """Ping the server to see if it's active
@@ -260,16 +260,16 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.admin_url}/ping'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.text})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.text})
 
     def get_users(self):
         """
         :return:
         """
         url = f'{self.base_url}/admin/users'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def create_search(self, container_name: str, query: Dict[str, Any]) -> SearchInfo:
         """
@@ -286,8 +286,8 @@ class AnnoRepoClient:
             return SearchInfo(id=search_id, location=location, hits=hits)
 
         url = f'{self.base_url}/services/{container_name}/search'
-        response = self.__post(url=url, json=query)
-        return self.__handle_response(response, {HTTPStatus.CREATED: to_search_info})
+        response = self._post(url=url, json=query)
+        return self._handle_response(response, {HTTPStatus.CREATED: to_search_info})
 
     def read_search_result_page(self, container_name: str, search_id: str, page: int = 0):
         """
@@ -299,8 +299,8 @@ class AnnoRepoClient:
         """
         url = f'{self.base_url}/services/{container_name}/search/{search_id}'
         params = {"page": page}
-        response = self.__get(url=url, params=params)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url, params=params)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_search_info(self, container_name: str, search_id: str):
         """
@@ -310,8 +310,8 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/services/{container_name}/search/{search_id}/info'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def create_global_search(self, query: Dict[str, Any]) -> SearchInfo:
         """
@@ -326,8 +326,8 @@ class AnnoRepoClient:
             return SearchInfo(id=search_id, location=location, hits=0)
 
         url = f'{self.base_url}/global/search'
-        response = self.__post(url=url, json=query)
-        return self.__handle_response(response, {HTTPStatus.CREATED: to_search_info})
+        response = self._post(url=url, json=query)
+        return self._handle_response(response, {HTTPStatus.CREATED: to_search_info})
 
     def read_global_search_result_page(self, search_id: str, page: int = 0):
         """
@@ -338,8 +338,8 @@ class AnnoRepoClient:
         """
         url = f'{self.base_url}/global/search/{search_id}'
         params = {"page": page}
-        response = self.__get(url=url, params=params)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url, params=params)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_global_search_status(self, search_id: str):
         """
@@ -348,8 +348,8 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/global/search/{search_id}/status'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_accessible_containers(self) -> Dict[str, List[str]]:
         """
@@ -357,55 +357,55 @@ class AnnoRepoClient:
         :return:
         """
         url = f'{self.base_url}/my/containers'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def create_index(self, container_name: str, field: str, index_type: str):
         url = f'{self.base_url}/services/{container_name}/indexes/{field}/{index_type}'
-        response = self.__put(url=url)
-        return self.__handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+        response = self._put(url=url)
+        return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
 
     def read_indexes(self, container_name: str):
         url = f'{self.base_url}/services/{container_name}/indexes'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_index_status(self, container_name: str, field: str, index_type: str):
         url = f'{self.base_url}/services/{container_name}/indexes/{field}/{index_type}/status'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_distinct_values(self, container_name: str, field: str):
         url = f'{self.base_url}/services/{container_name}/distinct-values/{field}'
-        response = self.__get(url=url)
-        return self.__handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def container_adapter(self, container_name: str) -> 'ContainerAdapter':
         return ContainerAdapter(self, container_name)
 
-    def __get(self, url, params=None, **kwargs):
-        args = self.__set_defaults(kwargs)
+    def _get(self, url, params=None, **kwargs):
+        args = self._set_defaults(kwargs)
         return self.session.get(url, params=params, **args)
 
-    def __head(self, url, params=None, **kwargs):
-        args = self.__set_defaults(kwargs)
+    def _head(self, url, params=None, **kwargs):
+        args = self._set_defaults(kwargs)
         return self.session.head(url, params=params, **args)
 
-    def __post(self, url, data=None, json=None, **kwargs):
-        args = self.__set_defaults(kwargs)
+    def _post(self, url, data=None, json=None, **kwargs):
+        args = self._set_defaults(kwargs)
         return self.session.post(url, data=data, json=json, **args)
 
-    def __put(self, url, data=None, **kwargs):
-        args = self.__set_defaults(kwargs)
+    def _put(self, url, data=None, **kwargs):
+        args = self._set_defaults(kwargs)
         return self.session.put(url, data=data, **args)
 
-    def __delete(self, url, **kwargs):
+    def _delete(self, url, **kwargs):
         ic(url)
         ic(kwargs)
-        args = self.__set_defaults(kwargs)
+        args = self._set_defaults(kwargs)
         return self.session.delete(url, **args)
 
-    def __set_defaults(self, args: dict):
+    def _set_defaults(self, args: dict):
         # ic(args)
         if 'headers' not in args:
             args['headers'] = {}
@@ -418,7 +418,7 @@ class AnnoRepoClient:
             args['headers']["If-Match"] = args.pop('etag')
         return args
 
-    def __handle_response(self, response: Response, result_producers: dict):
+    def _handle_response(self, response: Response, result_producers: dict):
         status_code = response.status_code
         status_message = http.client.responses[status_code]
         # ic(response.request.headers)
