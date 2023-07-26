@@ -3,11 +3,12 @@ from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Dict, Any, List
 
-import annorepo
 import requests
-from annorepo.model import ContainerIdentifier
 from icecream import ic
 from requests import Response
+
+import annorepo
+from annorepo.model import ContainerIdentifier
 
 
 @dataclass
@@ -25,12 +26,23 @@ class AnnoRepoClient:
         self.raise_exception = True
         self.timeout = timeout
         self.verbose = verbose
+        self.session = requests.Session()
 
     def __str__(self):
         return f'AnnoRepoClient({self.base_url}, {self.admin_url})'
 
     def __repr__(self):
         return self.__str__()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        # logger.debug(f"closing session with args: {args}")
+        self.session.close()
+
+    def close(self):
+        self.__exit__()
 
     def get_about(self):
         """Read the about info
@@ -373,25 +385,25 @@ class AnnoRepoClient:
 
     def __get(self, url, params=None, **kwargs):
         args = self.__set_defaults(kwargs)
-        return requests.get(url, params=params, **args)
+        return self.session.get(url, params=params, **args)
 
     def __head(self, url, params=None, **kwargs):
         args = self.__set_defaults(kwargs)
-        return requests.head(url, params=params, **args)
+        return self.session.head(url, params=params, **args)
 
     def __post(self, url, data=None, json=None, **kwargs):
         args = self.__set_defaults(kwargs)
-        return requests.post(url, data=data, json=json, **args)
+        return self.session.post(url, data=data, json=json, **args)
 
     def __put(self, url, data=None, **kwargs):
         args = self.__set_defaults(kwargs)
-        return requests.put(url, data=data, **args)
+        return self.session.put(url, data=data, **args)
 
     def __delete(self, url, **kwargs):
         ic(url)
         ic(kwargs)
         args = self.__set_defaults(kwargs)
-        return requests.delete(url, **args)
+        return self.session.delete(url, **args)
 
     def __set_defaults(self, args: dict):
         # ic(args)
