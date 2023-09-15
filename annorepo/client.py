@@ -131,7 +131,7 @@ class AnnoRepoClient:
         :param name: Name of the container
         :return: True if a container with the given name exists, False otherwise
         """
-        url = f'{self.base_url}/w3c/{name}'
+        url = f'{self.base_url}/services/{name}/metadata'
         response = self._head(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda _: True, HTTPStatus.NOT_FOUND: lambda _: False})
 
