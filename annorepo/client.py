@@ -221,7 +221,7 @@ class AnnoRepoClient:
         :param annotation_list: a list of Web Annotations, represented as dicts
         :return: list of annotation_identifiers
         """
-        url = f'{self.base_url}/batch/{container_name}/annotations/'
+        url = f'{self.base_url}/services/{container_name}/annotations-batch/'
         headers = {}
         response = self._post(url=url, headers=headers, json=annotation_list)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
