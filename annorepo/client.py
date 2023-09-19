@@ -1,10 +1,12 @@
 import http
+import time
 from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Dict, Any, List
 
 import requests
 from icecream import ic
+from loguru import logger
 from requests import Response
 
 import annorepo
@@ -222,10 +224,27 @@ class AnnoRepoClient:
         :return: list of annotation_identifiers
         """
         url = f'{self.base_url}/services/{container_name}/annotations-batch/'
+        max_tries = 10
         headers = {}
-        response = self._post(url=url, headers=headers, json=annotation_list)
-        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
-                                                HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
+        try_it = True
+        tries = 0
+        while try_it:
+            response = self._post(url=url, headers=headers, json=annotation_list)
+            result = self._handle_response(
+                response,
+                result_producers={
+                    HTTPStatus.CREATED: lambda r: r.json(),
+                    HTTPStatus.TOO_MANY_REQUESTS: lambda r: False,
+                    HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()
+                }
+            )
+            if not result and tries <= max_tries:
+                tries += 1
+                logger.warning(f"call to {url} returned TOO_MANY_REQUEST status; trying again in {tries} seconds")
+                time.sleep(tries)
+            else:
+                try_it = False
+        return result
 
     def read_annotation(self, container_name: str, annotation_name: str):
         """Read information about an existing Annotation Container with the given identifier
