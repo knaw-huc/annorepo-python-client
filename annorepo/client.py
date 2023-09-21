@@ -224,8 +224,8 @@ class AnnoRepoClient:
         :return: list of annotation_identifiers
         """
         url = f'{self.base_url}/services/{container_name}/annotations-batch/'
-        max_tries = 10
         headers = {}
+        max_tries = 10
         try_it = True
         tries = 0
         while try_it:
