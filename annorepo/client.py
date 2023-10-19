@@ -225,6 +225,7 @@ class AnnoRepoClient:
         headers = {}
         response = self._post(url=url, headers=headers, json=annotation_list)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
+
                                                 HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
 
     def read_annotation(self, container_name: str, annotation_name: str):
