@@ -15,7 +15,6 @@ from annorepo.model import ContainerIdentifier
 class SearchInfo:
     id: str
     location: str
-    hits: int
 
 
 class AnnoRepoClient:
@@ -177,15 +176,16 @@ class AnnoRepoClient:
                                          HTTPStatus.NOT_FOUND: lambda r: None
                                      })
 
-    def delete_container(self, container_name: str, etag: str):
+    def delete_container(self, container_name: str, etag: str, force: bool = False):
         """Remove the Annotation Container with the given identifier, provided it is empty
 
         :param container_name:
         :param etag:
+        :param force:
         :return:
         """
         url = f'{self.base_url}/w3c/{container_name}'
-        response = self._delete(url=url, etag=etag)
+        response = self._delete(url=url, etag=etag, params={"force": force})
         return self._handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def read_container_metadata(self, container_name: str):
@@ -272,6 +272,15 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
+    def add_user(self, user_name: str, api_key: str):
+        """
+        :return:
+        """
+        url = f'{self.base_url}/admin/users'
+        user_entry = {"userName": user_name, "apiKey": api_key}
+        response = self._post(url=url, json=[user_entry])
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
     def create_search(self, container_name: str, query: Dict[str, Any]) -> SearchInfo:
         """
 
@@ -283,8 +292,7 @@ class AnnoRepoClient:
         def to_search_info(_response: Response) -> SearchInfo:
             location = _response.headers["location"]
             search_id = location.split("/")[-1]
-            hits = _response.json()["hits"]
-            return SearchInfo(id=search_id, location=location, hits=hits)
+            return SearchInfo(id=search_id, location=location)
 
         url = f'{self.base_url}/services/{container_name}/search'
         response = self._post(url=url, json=query)
@@ -381,6 +389,11 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
+    def set_anonymous_user_read_access(self, container_name: str, has_read_access: bool = True):
+        url = f'{self.base_url}/services/{container_name}/settings/isReadOnlyForAnonymous'
+        response = self._put(url=url, json=has_read_access)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: True})
+
     def container_adapter(self, container_name: str) -> 'ContainerAdapter':
         return ContainerAdapter(self, container_name)
 
@@ -401,8 +414,6 @@ class AnnoRepoClient:
         return self.session.put(url, data=data, **args)
 
     def _delete(self, url, **kwargs):
-        ic(url)
-        ic(kwargs)
         args = self._set_defaults(kwargs)
         return self.session.delete(url, **args)
 
@@ -453,8 +464,8 @@ class ContainerAdapter:
     def read(self) -> ContainerIdentifier:
         return self.client.read_container(container_name=self.container_name)
 
-    def delete(self, etag: str):
-        return self.client.delete_container(container_name=self.container_name, etag=etag)
+    def delete(self, etag: str, force: bool = False):
+        return self.client.delete_container(container_name=self.container_name, etag=etag, force=force)
 
     def read_metadata(self):
         return self.client.read_container_metadata(container_name=self.container_name)
@@ -491,3 +502,7 @@ class ContainerAdapter:
 
     def read_distinct_values(self, field: str):
         return self.client.read_distinct_values(container_name=self.container_name, field=field)
+
+    def set_anonymous_user_read_access(self, has_read_access: bool = True):
+        return self.client.set_anonymous_user_read_access(container_name=self.container_name,
+                                                          has_read_access=has_read_access)
