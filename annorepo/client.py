@@ -1,10 +1,10 @@
+import base64
 import http
 from dataclasses import dataclass
 from http import HTTPStatus
 from typing import Dict, Any, List
 
 import requests
-from icecream import ic
 from requests import Response
 
 import annorepo
@@ -394,8 +394,53 @@ class AnnoRepoClient:
         response = self._put(url=url, json=has_read_access)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: True})
 
+    def create_custom_query(self, name: str, query: dict[str, any], description="", public: bool = True) -> str:
+        url = f'{self.base_url}/global/custom-query'
+        payload = {
+            "name": name,
+            "query": query,
+            "description": description,
+            "public": public
+        }
+        response = self._post(url=url, json=payload)
+        return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.headers["location"]})
+
+    def read_custom_queries(self) -> dict[str, any]:
+        url = f'{self.base_url}/global/custom-query'
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_expanded_custom_query(self, name: str, parameters: dict[str, str]) -> dict[str, any]:
+        query_call = self._query_call(name, parameters)
+        url = f'{self.base_url}/global/custom-query/{query_call}/expand'
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_custom_query_result_page(self, container_name: str, query_name: str, parameters: dict[str, str] = {},
+                                      page: int = 0):
+        """
+
+        :param container_name:
+        :param query_name:
+        :param parameters:
+        :param page:
+        :return:
+        """
+        query_call = self._query_call(query_name, parameters)
+        url = f'{self.base_url}/services/{container_name}/custom-query/{query_call}'
+        params = {"page": page}
+        response = self._get(url=url, params=params)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
     def container_adapter(self, container_name: str) -> 'ContainerAdapter':
         return ContainerAdapter(self, container_name)
+
+    def _query_call(self, name: str, parameters: dict[str, str]):
+        return f"{name}:{self._encoded_parameters(parameters)}"
+
+    @staticmethod
+    def _encoded_parameters(parameters: dict[str, str]) -> str:
+        return ",".join([f"{k}={base64.b64encode(str.encode(v)).decode()}" for k, v in parameters.items()])
 
     def _get(self, url, params=None, **kwargs):
         args = self._set_defaults(kwargs)
@@ -506,3 +551,8 @@ class ContainerAdapter:
     def set_anonymous_user_read_access(self, has_read_access: bool = True):
         return self.client.set_anonymous_user_read_access(container_name=self.container_name,
                                                           has_read_access=has_read_access)
+
+    def read_custom_query_result_page(self, query_name: str, parameters: dict[str, str] = {},
+                                      page: int = 0):
+        return self.client.read_custom_query_result_page(container_name=self.container_name, query_name=query_name,
+                                                         parameters=parameters, page=page)
