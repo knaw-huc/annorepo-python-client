@@ -2,7 +2,6 @@ import base64
 import http
 from dataclasses import dataclass
 from http import HTTPStatus
-from typing import Dict, Any, List
 
 import requests
 from requests import Response
@@ -18,7 +17,19 @@ class SearchInfo:
 
 
 class AnnoRepoClient:
+    """
+    A class to interact with an annorepo server
+    """
+
     def __init__(self, base_url: str, admin_url: str = None, timeout: int = None, api_key=None, verbose: bool = False):
+        """
+
+        :param base_url:
+        :param admin_url:
+        :param timeout:
+        :param api_key:
+        :param verbose:
+        """
         self.api_key = api_key
         self.base_url = base_url.strip('/')
         self.admin_url = admin_url.strip('/') if admin_url else "http://localhost:8081"
@@ -124,11 +135,13 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def has_container(self, name: str = None) -> bool:
+    def has_container(self, name: str) -> bool:
         """Check if a container with the given name exists
 
         :param name: Name of the container
+        :type name: str
         :return: True if a container with the given name exists, False otherwise
+        :rtype: bool
         """
         url = f'{self.base_url}/services/{name}/fields'
         response = self._head(url=url)
@@ -170,11 +183,13 @@ class AnnoRepoClient:
         url = f'{self.base_url}/w3c/{container_name}'
         response = self._get(url=url)
         # ic(response)
-        return self._handle_response(response,
-                                     {
-                                         HTTPStatus.OK: lambda r: r.json(),
-                                         HTTPStatus.NOT_FOUND: lambda r: None
-                                     })
+        return self._handle_response(
+            response,
+            {
+                HTTPStatus.OK: lambda r: r.json(),
+                HTTPStatus.NOT_FOUND: lambda r: None
+            }
+        )
 
     def delete_container(self, container_name: str, etag: str, force: bool = False):
         """Remove the Annotation Container with the given identifier, provided it is empty
@@ -192,13 +207,13 @@ class AnnoRepoClient:
         """Read metadata from the  Annotation Container with the given identifier
 
         :param container_name: The container name
-        :return: A Dict containing the metadata
+        :return: A dict containing the metadata
         """
         url = f'{self.base_url}/services/{container_name}/metadata'
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def add_annotation(self, container_name: str, content: Dict[str, Any], name: str = None):
+    def add_annotation(self, container_name: str, content: dict[str, any], name: str = None):
         """Add an annotation to the given container
 
         :param container_name: The container name
@@ -255,7 +270,7 @@ class AnnoRepoClient:
         response = self._delete(url=url)
         return self._handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
-    def get_ping(self):
+    def get_ping(self) -> str:
         """Ping the server to see if it's active
 
         :return:
@@ -274,6 +289,8 @@ class AnnoRepoClient:
 
     def add_user(self, user_name: str, api_key: str):
         """
+        :param user_name:
+        :param api_key:
         :return:
         """
         url = f'{self.base_url}/admin/users'
@@ -281,7 +298,7 @@ class AnnoRepoClient:
         response = self._post(url=url, json=[user_entry])
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def create_search(self, container_name: str, query: Dict[str, Any]) -> SearchInfo:
+    def create_search(self, container_name: str, query: dict[str, any]) -> SearchInfo:
         """
 
         :param container_name: the container name
@@ -322,7 +339,7 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def create_global_search(self, query: Dict[str, Any]) -> SearchInfo:
+    def create_global_search(self, query: dict[str, any]) -> SearchInfo:
         """
 
         :param query:
@@ -332,7 +349,7 @@ class AnnoRepoClient:
         def to_search_info(_response: Response) -> SearchInfo:
             location = _response.headers["location"]
             search_id = location.split("/")[-1]
-            return SearchInfo(id=search_id, location=location, hits=0)
+            return SearchInfo(id=search_id, location=location)
 
         url = f'{self.base_url}/global/search'
         response = self._post(url=url, json=query)
@@ -360,7 +377,7 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def read_accessible_containers(self) -> Dict[str, List[str]]:
+    def read_accessible_containers(self) -> dict[str, list[str]]:
         """
 
         :return:
@@ -370,31 +387,70 @@ class AnnoRepoClient:
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def create_index(self, container_name: str, field: str, index_type: str):
+        """
+
+        :param container_name:
+        :param field:
+        :param index_type:
+        :return:
+        """
         url = f'{self.base_url}/services/{container_name}/indexes/{field}/{index_type}'
         response = self._put(url=url)
         return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
 
     def read_indexes(self, container_name: str):
+        """
+
+        :param container_name:
+        :return:
+        """
         url = f'{self.base_url}/services/{container_name}/indexes'
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_index_status(self, container_name: str, field: str, index_type: str):
+        """
+
+        :param container_name:
+        :param field:
+        :param index_type:
+        :return:
+        """
         url = f'{self.base_url}/services/{container_name}/indexes/{field}/{index_type}/status'
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_distinct_values(self, container_name: str, field: str):
+        """
+
+        :param container_name:
+        :param field:
+        :return:
+        """
         url = f'{self.base_url}/services/{container_name}/distinct-values/{field}'
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def set_anonymous_user_read_access(self, container_name: str, has_read_access: bool = True):
+        """
+
+        :param container_name:
+        :param has_read_access:
+        :return:
+        """
         url = f'{self.base_url}/services/{container_name}/settings/isReadOnlyForAnonymous'
         response = self._put(url=url, json=has_read_access)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: True})
 
     def create_custom_query(self, name: str, query: dict[str, any], description="", public: bool = True) -> str:
+        """
+
+        :param name:
+        :param query:
+        :param description:
+        :param public:
+        :return:
+        """
         url = f'{self.base_url}/global/custom-query'
         payload = {
             "name": name,
@@ -406,11 +462,32 @@ class AnnoRepoClient:
         return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.headers["location"]})
 
     def read_custom_queries(self) -> dict[str, any]:
+        """
+
+        :return:
+        """
         url = f'{self.base_url}/global/custom-query'
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
+    def delete_custom_query(self, query_name: str) -> bool:
+        """
+
+        :param query_name:
+        :return:
+        """
+        url = f'{self.base_url}/global/custom-query/{query_name}'
+        response = self._delete(url=url)
+        return self._handle_response(response, {HTTPStatus.NO_CONTENT: True})
+
     def read_expanded_custom_query(self, name: str, parameters: dict[str, str]) -> dict[str, any]:
+        """
+
+        :param name:
+        :param parameters:
+        :return:
+        :rtype: dict[str, any]
+        """
         query_call = self._query_call(name, parameters)
         url = f'{self.base_url}/global/custom-query/{query_call}/expand'
         response = self._get(url=url)
@@ -433,6 +510,12 @@ class AnnoRepoClient:
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def container_adapter(self, container_name: str) -> 'ContainerAdapter':
+        """
+
+        :param container_name:
+        :return:
+        :rtype: ContainerAdapter
+        """
         return ContainerAdapter(self, container_name)
 
     def _query_call(self, name: str, parameters: dict[str, str]):
@@ -495,64 +578,168 @@ class AnnoRepoClient:
 
 
 class ContainerAdapter:
+    """
+    A class to interact with a given annotation container on an annorepo server
+    """
 
     def __init__(self, ar_client: AnnoRepoClient, container_name: str):
+        """
+
+        :param ar_client:
+        :type ar_client: AnnoRepoClient
+        :param container_name:
+        :type container_name: str
+        """
         self.client = ar_client
         self.container_name = container_name
 
     def exists(self) -> bool:
+        """
+
+        :return:
+        :rtype: bool
+        """
         return self.client.has_container(name=self.container_name)
 
     def create(self, label: str) -> ContainerIdentifier:
+        """
+        :param label:
+        :type label: str
+        :return:
+        """
         return self.client.create_container(name=self.container_name, label=label)
 
     def read(self) -> ContainerIdentifier:
+        """
+
+        :return:
+        """
         return self.client.read_container(container_name=self.container_name)
 
     def delete(self, etag: str, force: bool = False):
+        """
+
+        :param etag:
+        :param force:
+        :return:
+        """
         return self.client.delete_container(container_name=self.container_name, etag=etag, force=force)
 
     def read_metadata(self):
+        """
+
+        :return:
+        """
         return self.client.read_container_metadata(container_name=self.container_name)
 
-    def add_annotation(self, content: Dict[str, Any], name: str):
+    def add_annotation(self, content: dict[str, any], name: str):
+        """
+
+        :param content:
+        :param name:
+        :return:
+        """
         return self.client.add_annotation(container_name=self.container_name, content=content, name=name)
 
     def add_annotations(self, annotation_list: list):
+        """
+
+        :param annotation_list:
+        :return:
+        """
         return self.client.add_annotations(container_name=self.container_name, annotation_list=annotation_list)
 
     def read_annotation(self, annotation_name: str):
+        """
+
+        :param annotation_name:
+        :return:
+        """
         return self.client.read_annotation(container_name=self.container_name, annotation_name=annotation_name)
 
     def delete_annotation(self, annotation_name: str):
+        """
+
+        :param annotation_name:
+        :return:
+        """
         return self.client.delete_annotation(container_name=self.container_name, annotation_name=annotation_name)
 
-    def create_search(self, query: Dict[str, Any]) -> SearchInfo:
+    def create_search(self, query: dict[str, any]) -> SearchInfo:
+        """
+
+        :param query:
+        :return:
+        """
         return self.client.create_search(container_name=self.container_name, query=query)
 
     def read_search_result_page(self, search_id: str, page: int = 0):
+        """
+
+        :param search_id:
+        :param page:
+        :return:
+        """
         return self.client.read_search_result_page(container_name=self.container_name, search_id=search_id, page=page)
 
     def read_search_info(self, search_id: str):
+        """
+
+        :param search_id:
+        :return:
+        """
         return self.client.read_search_info(container_name=self.container_name, search_id=search_id)
 
     def create_index(self, field: str, index_type: str):
+        """
+
+        :param field:
+        :param index_type:
+        :return:
+        """
         return self.client.create_index(container_name=self.container_name, field=field, index_type=index_type)
 
     def read_indexes(self):
+        """
+
+        :return:
+        """
         return self.client.read_indexes(container_name=self.container_name)
 
     def read_index_status(self, field: str, index_type: str):
+        """
+
+        :param field:
+        :param index_type:
+        :return:
+        """
         return self.client.read_index_status(container_name=self.container_name, field=field, index_type=index_type)
 
     def read_distinct_values(self, field: str):
+        """
+
+        :param field:
+        :return:
+        """
         return self.client.read_distinct_values(container_name=self.container_name, field=field)
 
     def set_anonymous_user_read_access(self, has_read_access: bool = True):
+        """
+
+        :param has_read_access:
+        :return:
+        """
         return self.client.set_anonymous_user_read_access(container_name=self.container_name,
                                                           has_read_access=has_read_access)
 
     def read_custom_query_result_page(self, query_name: str, parameters: dict[str, str] = {},
                                       page: int = 0):
+        """
+
+        :param query_name:
+        :param parameters:
+        :param page:
+        :return:
+        """
         return self.client.read_custom_query_result_page(container_name=self.container_name, query_name=query_name,
                                                          parameters=parameters, page=page)
