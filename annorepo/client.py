@@ -291,7 +291,7 @@ class AnnoRepoClient:
             }
         )
 
-    def delete_annotation(self, container_name: str, annotation_name: str, etag: str):
+    def delete_annotation(self, container_name: str, annotation_name: str, etag: str) -> bool:
         """Remove the Annotation with the given name in the container with the given identifier
 
         :param container_name: the container name
@@ -675,7 +675,7 @@ class ContainerAdapter:
         """
         return self.client.read_container_metadata(container_name=self.container_name)
 
-    def add_annotation(self, content: dict[str, any], name: str):
+    def add_annotation(self, content: dict[str, any], name: str) -> AnnotationIdentifier:
         """
 
         :param content:
@@ -692,32 +692,33 @@ class ContainerAdapter:
         """
         return self.client.add_annotations(container_name=self.container_name, annotation_list=annotation_list)
 
-    def read_annotation(self, annotation_name: str):
+    def read_annotation(self, name: str) -> ReadAnnotationResult:
         """
 
-        :param annotation_name:
+        :param name:
         :return:
         """
-        return self.client.read_annotation(container_name=self.container_name, annotation_name=annotation_name)
+        return self.client.read_annotation(container_name=self.container_name, annotation_name=name)
 
-    def update_annotation(self, annotation_name: str, etag: str, content: dict[str, any]):
+    def update_annotation(self, name: str, etag: str, content: dict[str, any]) -> ReadAnnotationResult:
         """
 
-        :param annotation_name:
+        :param name:
         :param etag:
         :param content:
         :return:
         """
-        return self.client.update_annotation(container_name=self.container_name, annotation_name=annotation_name,
+        return self.client.update_annotation(container_name=self.container_name, annotation_name=name,
                                              etag=etag, content=content)
 
-    def delete_annotation(self, annotation_name: str):
+    def delete_annotation(self, name: str, etag: str) -> bool:
         """
 
-        :param annotation_name:
+        :param name:
+        :param etag:
         :return:
         """
-        return self.client.delete_annotation(container_name=self.container_name, annotation_name=annotation_name)
+        return self.client.delete_annotation(container_name=self.container_name, annotation_name=name, etag=etag)
 
     def create_search(self, query: dict[str, any]) -> SearchInfo:
         """
