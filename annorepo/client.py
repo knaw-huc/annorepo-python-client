@@ -7,13 +7,19 @@ import requests
 from requests import Response
 
 import annorepo
-from annorepo.model import ContainerIdentifier
+from annorepo.model import ContainerIdentifier, AnnotationIdentifier
 
 
 @dataclass
 class SearchInfo:
     id: str
     location: str
+
+
+@dataclass
+class ReadAnnotationResult:
+    etag: str
+    annotation: dict[str, any]
 
 
 class AnnoRepoClient:
@@ -152,7 +158,7 @@ class AnnoRepoClient:
 
         :param name: Optional name for the container (may be overruled)
         :param label: Label for the container (default: "A Container for Web Annotations")
-        :return: The Container
+        :return: The ContainerIdentifier
         """
         url = f'{self.base_url}/w3c'
         headers = {}
@@ -172,7 +178,8 @@ class AnnoRepoClient:
         response = self._post(url=url, json=specs, headers=headers)
         # ic(response.headers)
         return self._handle_response(response, {
-            HTTPStatus.CREATED: lambda r: (r.headers["etag"], r.headers["location"], r.json())})
+            HTTPStatus.CREATED: self._as_container_identifier
+        })
 
     def read_container(self, container_name: str) -> ContainerIdentifier:
         """Read information about an existing Annotation Container with the given identifier
@@ -186,7 +193,7 @@ class AnnoRepoClient:
         return self._handle_response(
             response,
             {
-                HTTPStatus.OK: lambda r: r.json(),
+                HTTPStatus.OK: self._as_container_identifier,
                 HTTPStatus.NOT_FOUND: lambda r: None
             }
         )
@@ -213,7 +220,7 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def add_annotation(self, container_name: str, content: dict[str, any], name: str = None):
+    def add_annotation(self, container_name: str, content: dict[str, any], name: str = None) -> AnnotationIdentifier:
         """Add an annotation to the given container
 
         :param container_name: The container name
@@ -227,9 +234,9 @@ class AnnoRepoClient:
             headers['slug'] = name
         response = self._post(url=url, headers=headers, json=content)
         # ic(response.headers)
-        return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+        return self._handle_response(response, {HTTPStatus.CREATED: self._as_annotation_identifier})
 
-    def add_annotations(self, container_name: str, annotation_list: list):
+    def add_annotations(self, container_name: str, annotation_list: list[dict[str, any]]):
         """Add annotations to the given container, in bulk
 
         :param container_name: The container name
@@ -239,11 +246,15 @@ class AnnoRepoClient:
         url = f'{self.base_url}/services/{container_name}/annotations-batch/'
         headers = {}
         response = self._post(url=url, headers=headers, json=annotation_list)
-        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json(),
+        return self._handle_response(
+            response,
+            {
+                HTTPStatus.OK: lambda r: r.json(),
+                HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()
+            }
+        )
 
-                                                HTTPStatus.INTERNAL_SERVER_ERROR: lambda r: r.json()})
-
-    def read_annotation(self, container_name: str, annotation_name: str):
+    def read_annotation(self, container_name: str, annotation_name: str) -> ReadAnnotationResult:
         """Read information about an existing Annotation Container with the given identifier
 
         :param container_name: The container name
@@ -255,19 +266,41 @@ class AnnoRepoClient:
         # ic(response)
         return self._handle_response(response,
                                      {
-                                         HTTPStatus.OK: lambda r: r.json(),
+                                         HTTPStatus.OK: lambda r: ReadAnnotationResult(etag=r.headers['eTag'],
+                                                                                       annotation=r.json()),
                                          HTTPStatus.NOT_FOUND: lambda r: None
                                      })
 
-    def delete_annotation(self, container_name: str, annotation_name: str):
+    def update_annotation(self, container_name: str, annotation_name: str, etag: str,
+                          content: dict[str, any]) -> ReadAnnotationResult:
+        """Update the given annotation
+
+        :param container_name: The container name
+        :param annotation_name: The annotation name
+        :param etag:
+        :param content: The Web Annotation represented as a dict
+        :return: the updated annotation
+        """
+        url = f'{self.base_url}/w3c/{container_name}/{annotation_name}'
+        response = self._put(url=url, etag=etag, json=content)
+        # ic(response.headers)
+        return self._handle_response(
+            response,
+            {
+                HTTPStatus.OK: lambda r: ReadAnnotationResult(etag=r.headers['eTag'], annotation=r.json())
+            }
+        )
+
+    def delete_annotation(self, container_name: str, annotation_name: str, etag: str):
         """Remove the Annotation with the given name in the container with the given identifier
 
         :param container_name: the container name
         :param annotation_name: the annotation name
+        :param etag: the eTag for this annotation
         :return:
         """
         url = f'{self.base_url}/w3c/{container_name}/{annotation_name}'
-        response = self._delete(url=url)
+        response = self._delete(url=url, etag=etag)
         return self._handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def get_ping(self) -> str:
@@ -558,6 +591,14 @@ class AnnoRepoClient:
             args['headers']["If-Match"] = args.pop('etag')
         return args
 
+    @staticmethod
+    def _as_container_identifier(_response: Response) -> ContainerIdentifier:
+        return ContainerIdentifier(url=_response.headers["location"], etag=_response.headers["etag"])
+
+    @staticmethod
+    def _as_annotation_identifier(_response: Response) -> AnnotationIdentifier:
+        return AnnotationIdentifier(url=_response.headers["location"], etag=_response.headers["etag"])
+
     def _handle_response(self, response: Response, result_producers: dict):
         status_code = response.status_code
         status_message = http.client.responses[status_code]
@@ -601,12 +642,14 @@ class ContainerAdapter:
         """
         return self.client.has_container(name=self.container_name)
 
-    def create(self, label: str) -> ContainerIdentifier:
+    def create(self, label: str = "") -> ContainerIdentifier:
         """
         :param label:
         :type label: str
         :return:
         """
+        if self.exists():
+            return self.read()
         return self.client.create_container(name=self.container_name, label=label)
 
     def read(self) -> ContainerIdentifier:
@@ -641,7 +684,7 @@ class ContainerAdapter:
         """
         return self.client.add_annotation(container_name=self.container_name, content=content, name=name)
 
-    def add_annotations(self, annotation_list: list):
+    def add_annotations(self, annotation_list: list[dict[str, any]]):
         """
 
         :param annotation_list:
@@ -656,6 +699,17 @@ class ContainerAdapter:
         :return:
         """
         return self.client.read_annotation(container_name=self.container_name, annotation_name=annotation_name)
+
+    def update_annotation(self, annotation_name: str, etag: str, content: dict[str, any]):
+        """
+
+        :param annotation_name:
+        :param etag:
+        :param content:
+        :return:
+        """
+        return self.client.update_annotation(container_name=self.container_name, annotation_name=annotation_name,
+                                             etag=etag, content=content)
 
     def delete_annotation(self, annotation_name: str):
         """

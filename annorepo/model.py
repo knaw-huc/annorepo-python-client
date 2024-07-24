@@ -2,14 +2,15 @@ import requests
 
 
 class ContainerIdentifier:
-    def __init__(self, url: str):
+    def __init__(self, url: str, etag: str):
         if not url.endswith('/'):
             url = f"{url}/"
         self.url = url
         self.uuid = url.split('/')[-2]
+        self.etag = etag
 
     def __str__(self):
-        return f"ContainerIdentifier:\n  url = {self.url}\n  uuid = {self.uuid}"
+        return f"ContainerIdentifier:\n  url = {self.url}\n  uuid = {self.uuid}\n  etag = {self.etag}"
 
     def __repr__(self):
         return self.__str__()
