@@ -530,7 +530,7 @@ class AnnoRepoClient:
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
     def read_custom_query_annotation_collection(self, container_name: str, query_name: str,
-                                                parameters: dict[str, str] = {}):
+                                                parameters: dict[str, str] = None):
         """
 
         :param container_name:
@@ -543,7 +543,7 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def read_custom_query_result_page(self, container_name: str, query_name: str, parameters: dict[str, str] = {},
+    def read_custom_query_result_page(self, container_name: str, query_name: str, parameters: dict[str, str] = None,
                                       page: int = 0):
         """
 
@@ -569,7 +569,10 @@ class AnnoRepoClient:
         return ContainerAdapter(self, container_name)
 
     def _query_call(self, name: str, parameters: dict[str, str]):
-        return f"{name}:{self._encoded_parameters(parameters)}"
+        if parameters:
+            return f"{name}:{self._encoded_parameters(parameters)}"
+        else:
+            return name
 
     @staticmethod
     def _encoded_parameters(parameters: dict[str, str]) -> str:
@@ -804,7 +807,7 @@ class ContainerAdapter:
         return self.client.set_anonymous_user_read_access(container_name=self.container_name,
                                                           has_read_access=has_read_access)
 
-    def read_custom_query_result_page(self, query_name: str, parameters: dict[str, str] = {},
+    def read_custom_query_result_page(self, query_name: str, parameters: dict[str, str] = None,
                                       page: int = 0):
         """
 
@@ -816,7 +819,7 @@ class ContainerAdapter:
         return self.client.read_custom_query_result_page(container_name=self.container_name, query_name=query_name,
                                                          parameters=parameters, page=page)
 
-    def read_custom_query_annotation_collection(self, query_name: str, parameters: dict[str, str] = {}):
+    def read_custom_query_annotation_collection(self, query_name: str, parameters: dict[str, str] = None):
         """
 
         :param query_name:
