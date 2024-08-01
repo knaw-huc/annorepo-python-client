@@ -23,7 +23,7 @@ annorepo-grpc:
 	$(ANNOREPO_PATH)/common/src/main/proto/*.proto
 
 .PHONY: publish
-publish:
+publish: docs/requirements.txt
 	poetry build && poetry publish
 
 .PHONY: version-update-patch

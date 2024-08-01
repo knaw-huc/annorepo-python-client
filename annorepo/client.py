@@ -475,11 +475,13 @@ class AnnoRepoClient:
         response = self._put(url=url, json=has_read_access)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: True})
 
-    def create_custom_query(self, name: str, query: dict[str, any], description="", public: bool = True) -> str:
+    def create_custom_query(self, name: str, query: dict[str, any], label: str, description="",
+                            public: bool = True) -> str:
         """
 
         :param name:
         :param query:
+        :param label:
         :param description:
         :param public:
         :return:
@@ -488,6 +490,7 @@ class AnnoRepoClient:
         payload = {
             "name": name,
             "query": query,
+            "label": label,
             "description": description,
             "public": public
         }
@@ -511,7 +514,7 @@ class AnnoRepoClient:
         """
         url = f'{self.base_url}/global/custom-query/{query_name}'
         response = self._delete(url=url)
-        return self._handle_response(response, {HTTPStatus.NO_CONTENT: True})
+        return self._handle_response(response, {HTTPStatus.NO_CONTENT: lambda r: True})
 
     def read_expanded_custom_query(self, name: str, parameters: dict[str, str]) -> dict[str, any]:
         """
@@ -523,6 +526,20 @@ class AnnoRepoClient:
         """
         query_call = self._query_call(name, parameters)
         url = f'{self.base_url}/global/custom-query/{query_call}/expand'
+        response = self._get(url=url)
+        return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+
+    def read_custom_query_annotation_collection(self, container_name: str, query_name: str,
+                                                parameters: dict[str, str] = {}):
+        """
+
+        :param container_name:
+        :param query_name:
+        :param parameters:
+        :return:
+        """
+        query_call = self._query_call(query_name, parameters)
+        url = f'{self.base_url}/services/{container_name}/custom-query/{query_call}/collection'
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
@@ -798,3 +815,14 @@ class ContainerAdapter:
         """
         return self.client.read_custom_query_result_page(container_name=self.container_name, query_name=query_name,
                                                          parameters=parameters, page=page)
+
+    def read_custom_query_annotation_collection(self, query_name: str, parameters: dict[str, str] = {}):
+        """
+
+        :param query_name:
+        :param parameters:
+        :return:
+        """
+        return self.client.read_custom_query_annotation_collection(container_name=self.container_name,
+                                                                   query_name=query_name,
+                                                                   parameters=parameters)
