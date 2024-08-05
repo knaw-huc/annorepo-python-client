@@ -10,6 +10,10 @@ pdoc:
 install:
 	poetry lock && poetry install
 
+.PHONY: tests
+tests:
+	poetry run pytest
+
 docs/requirements.txt: poetry.lock
 	poetry export -o docs/requirements.txt --without-hashes
 
@@ -24,6 +28,7 @@ annorepo-grpc:
 
 .PHONY: publish
 publish: docs/requirements.txt
+	make tests
 	poetry build && poetry publish
 
 .PHONY: version-update-patch
