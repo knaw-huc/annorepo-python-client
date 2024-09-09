@@ -2,6 +2,7 @@ import base64
 import http
 from dataclasses import dataclass
 from http import HTTPStatus
+from typing import Iterator
 
 import requests
 from requests import Response
@@ -197,6 +198,25 @@ class AnnoRepoClient:
                 HTTPStatus.NOT_FOUND: lambda r: None
             }
         )
+
+    def read_container_annotations(self, container_name: str) -> Iterator[dict[str, any]]:
+        """Read the annotations of an existing Annotation Container with the given identifier
+
+        :param container_name: The container name
+        :return: Information about the container
+        """
+        page = 0
+        go_on = True
+        while go_on:
+            url = f'{self.base_url}/w3c/{container_name}'
+            response = self._get(url=url, params={"page": page})
+            # ic(response)
+            annotation_page = self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+            annotations = annotation_page["items"]
+            for annotation in annotations:
+                yield annotation
+            go_on = "next" in annotation_page
+            page += 1
 
     def delete_container(self, container_name: str, etag: str, force: bool = False):
         """Remove the Annotation Container with the given identifier, provided it is empty
@@ -613,7 +633,8 @@ class AnnoRepoClient:
 
     @staticmethod
     def _as_container_identifier(_response: Response) -> ContainerIdentifier:
-        return ContainerIdentifier(url=_response.headers["location"], etag=_response.headers["etag"])
+        return ContainerIdentifier(url=_response.headers.get("location", _response.request.url),
+                                   etag=_response.headers["etag"])
 
     @staticmethod
     def _as_annotation_identifier(_response: Response) -> AnnotationIdentifier:
@@ -678,6 +699,13 @@ class ContainerAdapter:
         :return:
         """
         return self.client.read_container(container_name=self.container_name)
+
+    def read_annotations(self) -> Iterator[dict[str, any]]:
+        """
+
+        :return:
+        """
+        return self.client.read_container_annotations(container_name=self.container_name)
 
     def delete(self, etag: str, force: bool = False):
         """
