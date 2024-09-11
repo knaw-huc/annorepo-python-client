@@ -391,6 +391,28 @@ class AnnoRepoClient:
         response = self._get(url=url, params=params)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
+    def read_search_result_annotations(self, container_name: str, search_id: str, start_page: int = 0) -> Iterator[
+        dict[str, any]]:
+        """
+
+        :param container_name: the container name
+        :param search_id:
+        :param start_page:
+        :return:
+        """
+        url = f'{self.base_url}/services/{container_name}/search/{search_id}'
+        page = start_page
+        go_on = True
+        while go_on:
+            response = self._get(url=url, params={"page": page})
+            # ic(response)
+            annotation_page = self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
+            annotations = annotation_page["items"]
+            for annotation in annotations:
+                yield annotation
+            go_on = "next" in annotation_page
+            page += 1
+
     def read_search_info(self, container_name: str, search_id: str):
         """
 
@@ -794,6 +816,11 @@ class ContainerAdapter:
         :return:
         """
         return self.client.read_search_result_page(container_name=self.container_name, search_id=search_id, page=page)
+
+    def read_search_result_annotations(self, search_id: str, start_page: int = 0) -> Iterator[
+        dict[str, any]]:
+        return self.client.read_search_result_annotations(container_name=self.container_name, search_id=search_id,
+                                                          start_page=start_page)
 
     def read_search_info(self, search_id: str):
         """
