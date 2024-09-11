@@ -6,6 +6,8 @@ from typing import Iterator
 
 import requests
 from requests import Response
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
 
 import annorepo
 from annorepo.model import ContainerIdentifier, AnnotationIdentifier
@@ -44,6 +46,13 @@ class AnnoRepoClient:
         self.timeout = timeout
         self.verbose = verbose
         self.session = requests.Session()
+        retries = Retry(
+            total=5,
+            backoff_factor=0.1,
+            status_forcelist=[502, 503, 504],
+            allowed_methods={'GET'},
+        )
+        self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
     def __str__(self):
         return f'AnnoRepoClient({self.base_url}, {self.admin_url})'
@@ -209,6 +218,7 @@ class AnnoRepoClient:
         go_on = True
         while go_on:
             url = f'{self.base_url}/w3c/{container_name}'
+
             response = self._get(url=url, params={"page": page})
             # ic(response)
             annotation_page = self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
