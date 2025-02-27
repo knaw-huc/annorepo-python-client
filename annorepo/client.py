@@ -471,7 +471,7 @@ class AnnoRepoClient:
         response = self._get(url=url)
         return self._handle_response(response, {HTTPStatus.OK: lambda r: r.json()})
 
-    def create_index(self, container_name: str, field: str, index_type: str):
+    def create_index_v1(self, container_name: str, field: str, index_type: str):
         """
 
         :param container_name:
@@ -481,6 +481,32 @@ class AnnoRepoClient:
         """
         url = f'{self.base_url}/services/{container_name}/indexes/{field}/{index_type}'
         response = self._put(url=url)
+        return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+
+    def create_index_v2(self, container_name: str, field: str, index_type: str):
+        """
+
+        :param container_name:
+        :param field:
+        :param index_type:
+        :return:
+        """
+        url = f'{self.base_url}/services/{container_name}/indexes'
+        payload = {
+            field: index_type
+        }
+        response = self._post(url=url, json=payload)
+        return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
+
+    def create_compound_index(self, container_name: str, index_definition: dict[str, str]):
+        """
+
+        :param container_name:
+        :param index_definition:
+        :return:
+        """
+        url = f'{self.base_url}/services/{container_name}/indexes'
+        response = self._post(url=url, json=index_definition)
         return self._handle_response(response, {HTTPStatus.CREATED: lambda r: r.json()})
 
     def read_indexes(self, container_name: str):
@@ -837,7 +863,15 @@ class ContainerAdapter:
         :param index_type:
         :return:
         """
-        return self.client.create_index(container_name=self.container_name, field=field, index_type=index_type)
+        return self.client.create_index_v2(container_name=self.container_name, field=field, index_type=index_type)
+
+    def create_compound_index(self, index_definition: dict[str, str]):
+        """
+
+        :param index_definition:
+        :return:
+        """
+        return self.client.create_compound_index(container_name=self.container_name, index_definition=index_definition)
 
     def read_indexes(self):
         """
