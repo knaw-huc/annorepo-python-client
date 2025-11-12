@@ -46,6 +46,7 @@ class AnnoRepoClient:
         self.timeout = timeout
         self.verbose = verbose
         self.session = requests.Session()
+        self.session.trust_env = False  # prevent Authorization header overwriting
         retries = Retry(
             total=5,
             backoff_factor=0.1,
