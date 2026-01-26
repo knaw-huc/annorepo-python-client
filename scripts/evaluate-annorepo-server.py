@@ -22,7 +22,7 @@ test_annotation = {
 
 
 def evaluate_task(name, method):
-    global failures, success_counter
+    global success_counter
     print(f"{Fore.YELLOW}> {Fore.CYAN}{name}{Fore.YELLOW}:{Fore.RESET}")
     try:
         result = method()
